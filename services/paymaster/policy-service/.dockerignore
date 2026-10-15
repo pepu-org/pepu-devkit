@@ -1,0 +1,39 @@
+# Docker build context for the policy service. Nothing secret or stateful may
+# enter the image: it is built on the VM and could be pushed to a registry.
+
+# Secrets and local env files (the example file is allowed)
+.env
+.env.*
+!.env.example
+**/.keys.env
+.keys.env
+*.key
+*.pem
+*.secret
+
+# State: SQLite files and backups
+data/
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+backups/
+
+# Build output and deps are recreated inside the image
+node_modules
+dist
+
+# Not needed at runtime
+test/
+demo/
+integration-test.mjs
+check-bundler-allowed.mjs
+*.test.ts
+vitest.config.ts
+Dockerfile
+.dockerignore
+.git
+*.log
+
+# Dev-only apps registry (contains the documented local-dev key hash)
+config/apps.dev.json

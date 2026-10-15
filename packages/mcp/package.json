@@ -1,0 +1,79 @@
+{
+  "name": "@pepu-chain/mcp",
+  "version": "0.2.5",
+  "description": "MCP server for building on Pepe Unchained (PEPU) V2 with @pepu-chain/sdk: chain facts, contract registry, bundler/paymaster/sponsorship probes, error and tx explanation, template scaffolding, env and Privy checks, session policies, calldata and project-transaction encoding, bundled docs and SDK snippets, plus pepuscan (Blockscout) and RPC lookups. Not a generic Blockscout wrapper.",
+  "license": "MIT",
+  "author": "Pepe Unchained <contact@pepeunchained.com> (https://pepeunchained.com)",
+  "homepage": "https://guide.pepeunchained.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pepu-org/pepu-devkit.git",
+    "directory": "packages/mcp"
+  },
+  "bugs": {
+    "url": "https://github.com/pepu-org/pepu-devkit/issues"
+  },
+  "mcpName": "io.github.pepu-org/pepu",
+  "type": "module",
+  "bin": {
+    "pepu-mcp": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "LICENSE",
+    "dist"
+  ],
+  "scripts": {
+    "build": "node scripts/build-snapshots.mjs && tsup",
+    "dev": "tsx src/index.ts",
+    "start": "node dist/index.js",
+    "snapshots": "node scripts/build-snapshots.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "smoke": "tsx scripts/smoke-test.ts",
+    "prepack": "node -e \"require('node:fs').copyFileSync('../../LICENSE','LICENSE')\""
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "@pepu-chain/sdk": "workspace:*",
+    "viem": "^2.56.8",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsup": "^8.3.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.9"
+  },
+  "keywords": [
+    "pepu",
+    "pepe-unchained",
+    "mcp",
+    "model-context-protocol",
+    "blockscout",
+    "sdk",
+    "account-abstraction",
+    "paymaster"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "@zerodev/ecdsa-validator": "^5.4.0",
+    "@zerodev/permissions": "^5.6.0",
+    "@zerodev/sdk": "^5.5.0"
+  },
+  "peerDependenciesMeta": {
+    "@zerodev/ecdsa-validator": {
+      "optional": true
+    },
+    "@zerodev/permissions": {
+      "optional": true
+    },
+    "@zerodev/sdk": {
+      "optional": true
+    }
+  }
+}

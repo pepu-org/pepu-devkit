@@ -1,0 +1,15 @@
+{
+  "_comment": "PRODUCTION registry. Registered apps. apiKeyHashHex is sha256(rawApiKey) hex, never the raw key. Compute it with (from services/paymaster/policy-service): npm run hash-api-key -- <raw-key>. This file must NOT contain the local-dev key: that entry lives in apps.dev.json, selected with PEPU_APPS_PROFILE=dev (refused when NODE_ENV=production; the service also refuses to start in production if this file contains the local-dev key hash).",
+  "apps": [
+    {
+      "id": "sponsored-demo",
+      "_comment": "The apiKeyHashHex below is the sha256 hash of an app token (not the token itself). Operators must replace it with the hash of their own app token (npm run hash-api-key) before running this service. It replaces the former 'example-app' placeholder. Backs both the Privy Dashboard 'Paymaster URL' (https://<host>/paymaster/<raw-key>) and templates/sponsored-demo's browser demo. allowedDestinations is scoped to TapScore specifically (defense in depth on top of the global allowlist, which already restricts to it). dailySpendCapWei RAISED 50 -> 200 PEPU/day (2026-09-30): 50 PEPU/day was below the per-user daily cap (100 PEPU, see policy-service/.env's USER_DAILY_SPEND_CAP_WEI) — this app's own cap would have bound BEFORE a single well-behaved user even reached their own daily limit, the exact 'accidental limiter' the cap-sizing review was checking for. 200 PEPU/day covers roughly 16 fresh account deployments (~12 PEPU each, the one-time cost of a user's first UserOp — see src/config.ts's cap-sizing comment) in a single day, or one user's full 100 PEPU/day budget twice over, while staying well under the 500 PEPU/day global circuit breaker (see policy-service/.env's GLOBAL_DAILY_SPEND_CEILING_WEI comment) so this one app alone can never trip it. lifetimeSpendCapWei is null (no lifetime cap) because the daily cap + global ceiling already bound exposure; this is a demo app, not expected to run indefinitely unattended.",
+      "apiKeyHashHex": "35864d49ec9649eb3de172dbeaa250f2e2c16bf530ee28566518b3330d7c98d8",
+      "allowedDestinations": [
+        "0x261eA5971B93237a56990206A46Bc80318e4d078"
+      ],
+      "dailySpendCapWei": "200000000000000000000",
+      "lifetimeSpendCapWei": null
+    }
+  ]
+}

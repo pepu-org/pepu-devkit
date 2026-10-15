@@ -1,0 +1,9 @@
+[profile.default]
+src = "src"
+out = "out"
+libs = ["lib"]
+solc_version = "0.8.24"
+
+[rpc_endpoints]
+pepu_mainnet = "https://rpc-pepu-v2-mainnet-0.t.conduit.xyz"
+pepu_testnet = "https://rpc-pepu-v2-testnet-vn4qxxp9og.t.conduit.xyz"

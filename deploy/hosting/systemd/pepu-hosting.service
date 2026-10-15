@@ -1,0 +1,27 @@
+# Optional: makes "the stack is up" an explicit systemd-managed state on boot and lets you use
+# `systemctl restart pepu-hosting`. The compose file already sets `restart: unless-stopped`, so
+# Docker alone also brings the containers back after a reboot; use this unit when you want
+# systemd (journal, ordering, status) to own the lifecycle.
+#
+# Install (adjust WorkingDirectory to where the repo lives on the VM):
+#   sudo cp systemd/pepu-hosting.service /etc/systemd/system/
+#   sudo systemctl daemon-reload && sudo systemctl enable --now pepu-hosting
+[Unit]
+Description=PEPU hosted bundler + paymaster policy service (docker compose)
+Documentation=file:///opt/pepu/deploy/hosting/RUNBOOK.md
+Requires=docker.service
+After=docker.service network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=/opt/pepu/deploy/hosting
+ExecStart=/usr/bin/docker compose up -d --remove-orphans
+# `stop` (not `down`): keeps containers and volumes; the policy service gets its graceful-shutdown window.
+ExecStop=/usr/bin/docker compose stop
+TimeoutStartSec=300
+TimeoutStopSec=90
+
+[Install]
+WantedBy=multi-user.target

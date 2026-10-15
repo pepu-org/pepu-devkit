@@ -1,0 +1,12 @@
+{
+  "_comment": "Copy to apps.json (gitignored) and edit. One entry per registered app. apiKeyHashHex = sha256(rawAppToken), never the raw token. Generate token + hash on the VM: RAW=$(openssl rand -hex 24); docker compose run --rm --no-deps policy-service node dist/cli/hash-api-key.js \"$RAW\". The raw token goes only into the app's paymaster URL (https://paymaster.<DOMAIN>/paymaster/<RAW>). The placeholder hash below is the sha256 of nothing anyone knows, so it matches no token until replaced. Caps are per app per UTC day / lifetime, in wei. NEVER add the local-dev key here.",
+  "apps": [
+    {
+      "id": "my-app",
+      "apiKeyHashHex": "0000000000000000000000000000000000000000000000000000000000000000",
+      "allowedDestinations": ["0x261eA5971B93237a56990206A46Bc80318e4d078"],
+      "dailySpendCapWei": "100000000000000000000",
+      "lifetimeSpendCapWei": null
+    }
+  ]
+}

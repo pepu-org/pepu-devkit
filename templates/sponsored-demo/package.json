@@ -1,0 +1,38 @@
+{
+  "name": "pepu-sponsored-demo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Browser-testable proof that gas sponsorship works end to end on Pepe Unchained V2: Privy login, a zero-PEPU Kernel smart wallet, one sponsored TapScore.tap() UserOperation, and a visible EntryPoint deposit drop as the evidence.",
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "doctor": "node scripts/doctor.mjs"
+  },
+  "dependencies": {
+    "@pepu-chain/sdk": "workspace:*",
+    "@privy-io/node": "^0.34.0",
+    "@privy-io/react-auth": "^3.44.0",
+    "next": "^16.3.5",
+    "permissionless": "^0.2.47",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "viem": "^2.56.8"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^22.10.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "eslint": "^9.19.0",
+    "eslint-config-next": "^16.3.5",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9.3"
+  },
+  "overrides": {
+    "viem": "$viem"
+  }
+}

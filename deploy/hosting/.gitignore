@@ -1,0 +1,11 @@
+# Local, per-host configuration and state. Only the *.example files are committed.
+.env
+policy-service.env
+monitor.env
+policy-config/apps.json
+policy-config/allowlist.json
+backups/*
+!backups/.gitkeep
+secrets/*
+!secrets/.gitignore
+!secrets/README.md

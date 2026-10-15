@@ -1,0 +1,25 @@
+{
+  "_comment": "LOCAL DEVELOPMENT registry (PEPU_APPS_PROFILE=dev). Superset of apps.json plus the documented local-dev key for templates/sponsored-session-app. NEVER use in production: the service refuses PEPU_APPS_PROFILE=dev under NODE_ENV=production. Keep the shared entries in sync with apps.json (test/appsConfig.test.ts enforces it).",
+  "apps": [
+    {
+      "id": "sponsored-demo",
+      "_comment": "The apiKeyHashHex below is the sha256 hash of an app token (not the token itself). Operators must replace it with the hash of their own app token (npm run hash-api-key) before running this service. It replaces the former 'example-app' placeholder. Backs both the Privy Dashboard 'Paymaster URL' (https://<host>/paymaster/<raw-key>) and templates/sponsored-demo's browser demo. allowedDestinations is scoped to TapScore specifically (defense in depth on top of the global allowlist, which already restricts to it). dailySpendCapWei RAISED 50 -> 200 PEPU/day (2026-09-30): 50 PEPU/day was below the per-user daily cap (100 PEPU, see policy-service/.env's USER_DAILY_SPEND_CAP_WEI) — this app's own cap would have bound BEFORE a single well-behaved user even reached their own daily limit, the exact 'accidental limiter' the cap-sizing review was checking for. 200 PEPU/day covers roughly 16 fresh account deployments (~12 PEPU each, the one-time cost of a user's first UserOp — see src/config.ts's cap-sizing comment) in a single day, or one user's full 100 PEPU/day budget twice over, while staying well under the 500 PEPU/day global circuit breaker (see policy-service/.env's GLOBAL_DAILY_SPEND_CEILING_WEI comment) so this one app alone can never trip it. lifetimeSpendCapWei is null (no lifetime cap) because the daily cap + global ceiling already bound exposure; this is a demo app, not expected to run indefinitely unattended.",
+      "apiKeyHashHex": "35864d49ec9649eb3de172dbeaa250f2e2c16bf530ee28566518b3330d7c98d8",
+      "allowedDestinations": [
+        "0x261eA5971B93237a56990206A46Bc80318e4d078"
+      ],
+      "dailySpendCapWei": "200000000000000000000",
+      "lifetimeSpendCapWei": null
+    },
+    {
+      "id": "sponsored-session-app",
+      "_comment": "LOCAL TESTING ONLY, for templates/sponsored-session-app. apiKeyHashHex is sha256 of the documented dev key 'local-dev-sponsored-session-key', not a real credential. Operators must replace it with the hash of their own app token (npm run hash-api-key) before running this service anywhere reachable. allowedDestinations is TapScore only. The first UserOperation of a session (deploy plus enable permission) reserves about 20 PEPU worst case, so the per-user caps (USER_HOURLY_SPEND_CAP_WEI, USER_DAILY_SPEND_CAP_WEI) must be raised above the stock 25 / 100 PEPU for more than one tap per hour.",
+      "apiKeyHashHex": "cd693b92ac1aa06ac54691b1acd4daa67528a6a6f4e4cfb42d8d45bf71b3b25b",
+      "allowedDestinations": [
+        "0x261eA5971B93237a56990206A46Bc80318e4d078"
+      ],
+      "dailySpendCapWei": "200000000000000000000",
+      "lifetimeSpendCapWei": null
+    }
+  ]
+}

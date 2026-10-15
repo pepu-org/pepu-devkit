@@ -1,0 +1,13 @@
+# Install as the pepu user:   sudo -u pepu crontab -e      (paste these lines)
+# Paths assume the kit lives in /opt/pepu/app (install.sh) and logs go to /var/log/pepu.
+# Cron's PATH is minimal on purpose: the scripts call node by absolute path.
+
+# Health + deposit + executor float + certificate checks; alerts go to the webhook in /etc/pepu/monitor.env.
+*/5 * * * * /opt/pepu/app/deploy/hosting/nginx-pm2/scripts/healthcheck-cron.sh >> /var/log/pepu/monitor.log 2>&1
+
+# Daily SQLite snapshot (03:17) of the policy DB, 14 days kept locally. Set BACKUP_UPLOAD_CMD (see
+# scripts/backup-sqlite-host.sh) to copy it off the VPS: a backup on the same disk is not a backup.
+17 3 * * * BACKUP_KEEP_DAYS=14 /opt/pepu/app/deploy/hosting/nginx-pm2/scripts/backup-sqlite-host.sh >> /var/log/pepu/backup.log 2>&1
+
+# TLS renewal is NOT here: the distro's certbot package installs a systemd timer (certbot.timer) that renews
+# and runs the deploy hook (reload nginx). Check it with:  systemctl list-timers certbot.timer

@@ -1,0 +1,14 @@
+{
+  "extraKnownMarketplaces": {
+    "pepu": {
+      "source": {
+        "source": "github",
+        "repo": "pepu-org/pepu-devkit"
+      },
+      "autoUpdate": true
+    }
+  },
+  "enabledPlugins": {
+    "pepu-devkit@pepu": true
+  }
+}

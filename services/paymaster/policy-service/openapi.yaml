@@ -1,0 +1,278 @@
+openapi: 3.0.3
+info:
+  title: PEPU tiered gas-sponsorship API (v2)
+  version: 2.0.0
+  description: |
+    Gated management + sponsorship API of the PEPU policy service. Mounted only when `SPONSORSHIP_V2_ENABLED=true`.
+    See services/paymaster/SPONSORSHIP-SPEC.md.
+
+    **Funds never move through this API, and it is NOT required to use the contract.** Deposits are one-way: anyone can
+    deposit into any project (claimed or not) or the free pool, and NOTHING can withdraw (no project owner, no contract
+    owner). A project is `keccak256(appId)`, one per Privy app. Its settings belong to the owner established by an
+    on-chain CLAIM backed by an EIP-712 attestation this service signs after checking the developer's Privy app secret
+    (`POST /v2/projects/verify`; the secret is used for one outbound request and never stored, logged or echoed). The
+    first claim of an EMPTY project is immediate; the first claim of a project that already holds deposited funds, and every re-claim of an owned project, is timelocked on-chain (>= 48h, announced by an event). This API is a convenience
+    layer that encodes calldata (`POST /v2/projects/prepare`), indexes a claimed project and issues the credentials the
+    policy service needs to sign sponsorships.
+
+    **Who may be sponsored.** The chain **free tier** is only for users with a Privy account: it requires a verified
+    Privy access token (`Authorization: Bearer`, or ERC-7677 `context.privyAccessToken`); there is no anonymous tier
+    and no chain-wide daily ceiling. A **project** may sponsor ANY wallet (Privy or not, native/EOA wallets via smart
+    accounts); the free tier never pays for those wallets. A project's budget is spent only with its **server API key**
+    (secret, backend use, any wallet) or its **client token** (publishable) from one of the project's allowed origins,
+    on top of the contract's own destination allowlist and per-wallet/daily limits.
+
+    Auth tiers: public; **owner** (SIWE session bearer, address must equal the project's current on-chain owner);
+    **admin** (`X-Admin-Token`, separate from the v1 admin token; routes are 404 when unset); **credential**
+    (project server key or client token, plus a Privy token for the free tier). All amounts are decimal wei strings. Errors are
+    `{ "error": "<code>", "message": "..." }`; 429 carries `Retry-After`.
+servers:
+  - url: https://{host}
+    variables: { host: { default: paymaster.example.com } }
+components:
+  securitySchemes:
+    session:
+      type: http
+      scheme: bearer
+      description: Opaque session token from POST /v2/auth/login (SIWE). 1 h TTL.
+    admin:
+      type: apiKey
+      in: header
+      name: X-Admin-Token
+  schemas:
+    Error:
+      type: object
+      required: [error, message]
+      properties: { error: { type: string }, message: { type: string }, reason: { type: string } }
+    Wei: { type: string, pattern: '^[0-9]+$', example: '50000000000000000000' }
+    Address: { type: string, pattern: '^0x[0-9a-fA-F]{40}$' }
+    Bytes32: { type: string, pattern: '^0x[0-9a-fA-F]{64}$' }
+    PreparedTx:
+      type: object
+      properties:
+        chainId: { type: integer }
+        to: { $ref: '#/components/schemas/Address' }
+        data: { type: string }
+        value: { $ref: '#/components/schemas/Wei' }
+        function: { type: string }
+        description: { type: string }
+    ClaimAttestation:
+      type: object
+      required: [appId, newOwner, nonce, deadline, signature]
+      description: "EIP-712 ProjectClaim(string appId,address newOwner,uint256 nonce,uint256 deadline); domain PepuSponsoredPaymaster/1 with this chain id and the paymaster address. Single-use, expires at `deadline`."
+      properties:
+        appId: { type: string, maxLength: 128 }
+        newOwner: { $ref: '#/components/schemas/Address' }
+        nonce: { type: string, pattern: '^[0-9]+$' }
+        deadline: { type: string, pattern: '^[0-9]+$' }
+        signature: { type: string }
+    PrepareRequest:
+      oneOf:
+        - type: object
+          required: [action, attestation]
+          additionalProperties: false
+          description: "First claim of a project (anyone may submit the tx; the attestation fixes the owner). A project with no deposited funds is claimed immediately; a project that already holds funds is PENDING for the on-chain admin delay (>= 48h, event ProjectClaimProposed), finished with executeReclaim and cancellable by the contract owner or manager. The claim sets NO allowlist or limits (they cannot be bound by the attestation): afterwards the owner calls setTargets, setDailyLimit and setSenderDailyLimit; nothing is sponsorable until then. Extra fields (the former targets/limits) are rejected with 400."
+          properties:
+            action: { enum: [claimProject] }
+            attestation: { $ref: '#/components/schemas/ClaimAttestation' }
+        - type: object
+          required: [action, attestation]
+          description: "Timelocked re-claim of an already-owned project (takes effect after the on-chain delay, >= 48h, and expires 30 days after that). The current owner can cancel it once per new owner: a second attested re-claim by the same new owner cannot be cancelled."
+          properties: { action: { enum: [reclaimProject] }, attestation: { $ref: '#/components/schemas/ClaimAttestation' } }
+        - type: object
+          required: [action, projectId, amountWei]
+          description: "Deposit (one-way, open to anyone, the project may be unclaimed). There are no withdrawal actions."
+          properties: { action: { enum: [depositFor] }, projectId: { $ref: '#/components/schemas/Bytes32' }, amountWei: { $ref: '#/components/schemas/Wei' } }
+        - type: object
+          required: [action, projectId]
+          properties: { action: { enum: [executeReclaim, cancelReclaim, acceptProjectOwnership] }, projectId: { $ref: '#/components/schemas/Bytes32' } }
+        - type: object
+          required: [action, projectId, targets, allowed]
+          properties: { action: { enum: [setTargets] }, projectId: { $ref: '#/components/schemas/Bytes32' }, targets: { type: array, items: { $ref: '#/components/schemas/Address' } }, allowed: { type: boolean } }
+        - type: object
+          required: [action, projectId, limitWei]
+          properties: { action: { enum: [setDailyLimit, setSenderDailyLimit] }, projectId: { $ref: '#/components/schemas/Bytes32' }, limitWei: { $ref: '#/components/schemas/Wei' } }
+        - type: object
+          required: [action, projectId, paused]
+          properties: { action: { enum: [setPaused] }, projectId: { $ref: '#/components/schemas/Bytes32' }, paused: { type: boolean } }
+        - type: object
+          required: [action, projectId, newOwner]
+          properties: { action: { enum: [proposeProjectOwner] }, projectId: { $ref: '#/components/schemas/Bytes32' }, newOwner: { $ref: '#/components/schemas/Address' } }
+    ProjectDetail:
+      type: object
+      properties:
+        projectId: { $ref: '#/components/schemas/Bytes32' }
+        appId: { type: string, nullable: true }
+        indexed: { type: boolean }
+        owner: { $ref: '#/components/schemas/Address' }
+        onchain:
+          type: object
+          properties:
+            balance: { $ref: '#/components/schemas/Wei' }
+            spendable: { $ref: '#/components/schemas/Wei', description: "balance minus signed-but-unsettled approvals" }
+            outstandingApprovals: { $ref: '#/components/schemas/Wei' }
+            paused: { type: boolean }
+            dailyLimit: { $ref: '#/components/schemas/Wei' }
+            senderDailyLimit: { $ref: '#/components/schemas/Wei', description: "per-wallet daily limit, enforced by the contract" }
+            spentToday: { $ref: '#/components/schemas/Wei' }
+            dailyRemaining: { $ref: '#/components/schemas/Wei' }
+        adminChangeDelaySeconds: { type: integer, nullable: true, description: "immutable on-chain timelock (>= 48h) for signer/bundler additions and project re-claims; pause is a project's exit during it" }
+        allowlist: { type: array, nullable: true, items: { $ref: '#/components/schemas/Address' } }
+        offchain: { type: object, nullable: true, description: "client-token and server-key prefixes, allowedOrigins, per-user cap, requireIdentity, status" }
+        usage24h: { type: object, nullable: true, properties: { ops: { type: integer }, projectFundedWei: { $ref: '#/components/schemas/Wei' }, freeTierFundedWei: { $ref: '#/components/schemas/Wei' } } }
+        contract: { type: object, properties: { address: { $ref: '#/components/schemas/Address' }, chainId: { type: integer } } }
+    TokenResponse:
+      type: object
+      properties:
+        token: { type: string, description: "publishable client token, shown once" }
+        paymasterUrl: { type: string, description: 'https://<host>/v2/paymaster/<token> (paste into Privy "Paymaster URL"); spends the project budget only from allowedOrigins' }
+        serverKey: { type: string, description: "SECRET server API key (backend only; any wallet, no origin restriction), shown once; returned on project creation" }
+    ServerKeyResponse:
+      type: object
+      properties:
+        serverKey: { type: string, description: "shown once; the previous key stops working immediately" }
+  responses:
+    Unauthenticated: { description: "Missing/expired credential", content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+    Forbidden: { description: "Authenticated but not the on-chain owner", content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+    RateLimited: { description: "Rate limited", headers: { Retry-After: { schema: { type: integer } } }, content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+paths:
+  /v2/config:
+    get: { summary: "Public service/contract configuration", security: [], responses: { '200': { description: "ok" } } }
+  /v2/contract:
+    get: { summary: "Paymaster address and ABI (build deposit and settings txs from this)", security: [], responses: { '200': { description: '{address, chainId, entryPoint, abi}' } } }
+  /v2/free-tier:
+    get:
+      summary: "Free-tier state (pool balance, per-op cap, per-wallet limit, per-user allowance). There is no chain-wide ceiling; eligibility is a verified Privy account."
+      security: []
+      responses: { '200': { description: "ok" }, '503': { description: "chain unreadable" } }
+  /v2/auth/nonce:
+    get: { summary: "Issue a single-use SIWE nonce (5 min)", security: [], responses: { '200': { description: '{nonce, expiresAt}' }, '429': { $ref: '#/components/responses/RateLimited' } } }
+  /v2/auth/login:
+    post:
+      summary: "Verify a SIWE (EIP-4361) message + signature and open a session"
+      description: Domain must be in SIWE_DOMAINS, chainId must match, expirationTime required (<= 10 min after issuedAt), nonce single-use. EOA and ERC-1271 (Safe) signatures accepted.
+      security: []
+      requestBody: { required: true, content: { application/json: { schema: { type: object, required: [message, signature], properties: { message: { type: string }, signature: { type: string } } } } } }
+      responses: { '200': { description: '{token, address, expiresAt}' }, '401': { description: 'login_failed, reason in body' }, '429': { $ref: '#/components/responses/RateLimited' } }
+  /v2/auth/logout:
+    post: { summary: "Revoke the session", security: [{ session: [] }], responses: { '200': { description: "ok" }, '401': { $ref: '#/components/responses/Unauthenticated' } } }
+  /v2/me:
+    get: { summary: "Session address", security: [{ session: [] }], responses: { '200': { description: '{address}' }, '401': { $ref: '#/components/responses/Unauthenticated' } } }
+  /v2/projects/prepare:
+    post:
+      summary: "Encode a transaction for a wallet to sign (claim, re-claim, deposit, allowlist, limits, pause, ownership). No withdrawals exist."
+      description: Owner-gated actions are checked against the project's current on-chain owner. This endpoint sends nothing.
+      security: [{ session: [] }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/PrepareRequest' } } } }
+      responses: { '200': { description: "ok", content: { application/json: { schema: { $ref: '#/components/schemas/PreparedTx' } } } }, '400': { description: "invalid" }, '403': { $ref: '#/components/responses/Forbidden' } }
+  /v2/projects/verify:
+    post:
+      summary: "Prove control of a Privy app and receive a signed ownership attestation"
+      description: |
+        Requires a SIWE session for `ownerAddress`. The service checks `appId` + `appSecret` against Privy's REST API
+        (HTTP Basic + `privy-app-id` header, `GET /v1/users?limit=1`) and, if valid, returns an EIP-712 `ProjectClaim`
+        attestation for `ownerAddress`. Submit it on-chain with `POST /v2/projects/prepare` (`claimProject` when the
+        project is unclaimed, otherwise `reclaimProject`, which is timelocked >= 48h and cancellable by the current
+        owner). **The app secret is used for exactly one outbound request and is never stored, logged or echoed**,
+        including in error responses; rotate it in the Privy dashboard afterwards if you wish. Rate limited per IP (every request)
+        and by a failure budget per (app id, signed-in address) that is charged only when Privy rejects the credentials,
+        so another account cannot lock the real owner out. The app id is used exactly as given (case-sensitive; Privy
+        app ids are lower-case cuids). The attestation deadline is at most 1 hour ahead (the contract rejects more).
+        Trust model: the policy signer is the ownership gatekeeper; a compromised signer could start
+        re-claims or claim unclaimed projects but can never withdraw funds (none can be withdrawn), and re-claims
+        are announced on-chain, timelocked, cancellable by the owner, and die if the signer is removed.
+      security: [{ session: [] }]
+      requestBody: { required: true, content: { application/json: { schema: { type: object, required: [appId, appSecret, ownerAddress], additionalProperties: false, properties: { appId: { type: string, pattern: '^[A-Za-z0-9_-]{1,128}$' }, appSecret: { type: string, maxLength: 512 }, ownerAddress: { $ref: '#/components/schemas/Address' } } } } } }
+      responses:
+        '200': { description: '{projectId, appId, ownerAddress, action: claimProject|reclaimProject, takesEffect: immediately|after_admin_change_delay, attestation, expiresAt, note}' }
+        '400': { description: "malformed (fixed message; the secret is never echoed)" }
+        '403': { description: "ownerAddress is not the session address, or Privy rejected the credentials" }
+        '409': { description: "this wallet already owns the project" }
+        '429': { $ref: '#/components/responses/RateLimited' }
+        '501': { description: "not configured on this deployment" }
+        '502': { description: "Privy could not be reached" }
+  /v2/projects:
+    post:
+      summary: "Index an on-chain claimed project and issue its credentials (client token + server key)"
+      description: |
+        Convenience layer; claiming is an on-chain call (see `POST /v2/projects/verify`). The signed-in address must be the
+        project's current on-chain owner. Identify the project by `projectId`, or by `appId` (the id is keccak256(appId)).
+        `allowedOrigins` are plain
+        origins (scheme://host[:port], http only for localhost); a project with none can only be spent with its server key.
+      security: [{ session: [] }]
+      requestBody: { required: true, content: { application/json: { schema: { type: object, properties: { projectId: { $ref: '#/components/schemas/Bytes32' }, appId: { type: string }, perUserDailyCapWei: { $ref: '#/components/schemas/Wei' }, requireIdentity: { type: boolean, description: "opt-in: refuse wallets without a verified Privy token (default false: any wallet)" }, allowedOrigins: { type: array, maxItems: 20, items: { type: string } } } } } } }
+      responses: { '201': { description: "created", content: { application/json: { schema: { $ref: '#/components/schemas/TokenResponse' } } } }, '400': { description: "malformed, or appId does not hash to projectId (app_id_mismatch)" }, '403': { $ref: '#/components/responses/Forbidden' }, '409': { description: "not claimed on-chain yet (a pending claim of a funded project counts as not claimed until executeReclaim), or already indexed" } }
+    get: { summary: "Projects owned by the session address (plus on-chain claims not yet indexed)", security: [{ session: [] }], responses: { '200': { description: '{projects, onchainUnindexed}' } } }
+  /v2/projects/{projectId}:
+    parameters: [{ name: projectId, in: path, required: true, schema: { $ref: '#/components/schemas/Bytes32' } }]
+    get: { summary: "Project state - on-chain balance/limits/allowlist, off-chain settings, 24h usage", security: [{ session: [] }], responses: { '200': { description: "ok", content: { application/json: { schema: { $ref: '#/components/schemas/ProjectDetail' } } } }, '403': { $ref: '#/components/responses/Forbidden' } } }
+  /v2/projects/{projectId}/token/rotate:
+    parameters: [{ name: projectId, in: path, required: true, schema: { $ref: '#/components/schemas/Bytes32' } }]
+    post: { summary: "Mint a new publishable client token (old one stops working immediately)", security: [{ session: [] }], responses: { '200': { description: "ok", content: { application/json: { schema: { $ref: '#/components/schemas/TokenResponse' } } } } } }
+  /v2/projects/{projectId}/server-key/rotate:
+    parameters: [{ name: projectId, in: path, required: true, schema: { $ref: '#/components/schemas/Bytes32' } }]
+    post: { summary: "Mint a new server API key (old one stops working immediately)", security: [{ session: [] }], responses: { '200': { description: "ok", content: { application/json: { schema: { $ref: '#/components/schemas/ServerKeyResponse' } } } } } }
+  /v2/projects/{projectId}/settings:
+    parameters: [{ name: projectId, in: path, required: true, schema: { $ref: '#/components/schemas/Bytes32' } }]
+    patch:
+      summary: "Off-chain settings (per-user daily cap within the admin maximum, requireIdentity, allowedOrigins for the client token)"
+      security: [{ session: [] }]
+      requestBody: { content: { application/json: { schema: { type: object, properties: { perUserDailyCapWei: { $ref: '#/components/schemas/Wei' }, requireIdentity: { type: boolean }, allowedOrigins: { type: array, maxItems: 20, items: { type: string } } } } } } }
+      responses: { '200': { description: "ok" }, '400': { description: "out of range" } }
+  /v2/projects/{projectId}/usage:
+    parameters:
+      - { name: projectId, in: path, required: true, schema: { $ref: '#/components/schemas/Bytes32' } }
+      - { name: limit, in: query, schema: { type: integer, maximum: 500 } }
+      - { name: before, in: query, schema: { type: integer } }
+    get: { summary: "Spend history - reserved vs actual (reconciled from on-chain UserOpSettled), project- vs free-funded", security: [{ session: [] }], responses: { '200': { description: "ok" } } }
+  /v2/projects/{projectId}/events:
+    parameters:
+      - { name: projectId, in: path, required: true, schema: { $ref: '#/components/schemas/Bytes32' } }
+      - { name: fromBlock, in: query, schema: { type: integer } }
+      - { name: limit, in: query, schema: { type: integer, maximum: 1000 } }
+    get: { summary: "On-chain events for the project (deposits, claims, settlements, config)", security: [{ session: [] }], responses: { '200': { description: "ok" } } }
+  /v2/projects/{projectId}/allowlist:
+    parameters: [{ name: projectId, in: path, required: true, schema: { $ref: '#/components/schemas/Bytes32' } }]
+    get: { summary: "Current on-chain destination allowlist (change it with prepare {action:setTargets})", security: [{ session: [] }], responses: { '200': { description: "ok" } } }
+  /v2/admin/overview:
+    get: { summary: "Free pool, contract totals, reconciler status, usage counts, recent admin actions, and the in-memory count of unauthenticated (unknown-credential) denials", security: [{ admin: [] }], responses: { '200': { description: "ok" }, '401': { $ref: '#/components/responses/Unauthenticated' }, '404': { description: "admin API disabled" } } }
+  /v2/admin/projects:
+    get: { summary: "All indexed projects/apps", security: [{ admin: [] }], responses: { '200': { description: "ok" } } }
+  /v2/admin/apps:
+    post:
+      summary: "Create a free-tier-only app (no on-chain project) and its token"
+      security: [{ admin: [] }]
+      requestBody: { required: true, content: { application/json: { schema: { type: object, required: [label], properties: { label: { type: string }, perUserDailyCapWei: { $ref: '#/components/schemas/Wei' }, allowedDestinations: { type: array, items: { $ref: '#/components/schemas/Address' } } } } } } }
+      responses: { '201': { description: "created" }, '409': { description: "label exists" } }
+  /v2/admin/projects/{key}/status:
+    parameters: [{ name: key, in: path, required: true, schema: { type: string } }]
+    post: { summary: "Suspend/unsuspend an app token (kill switch; does not touch on-chain funds)", security: [{ admin: [] }], requestBody: { content: { application/json: { schema: { type: object, required: [status], properties: { status: { enum: [active, suspended] } } } } } }, responses: { '200': { description: "ok" } } }
+  /v2/admin/projects/{key}/token/rotate:
+    parameters: [{ name: key, in: path, required: true, schema: { type: string } }]
+    post: { summary: "Admin token rotation (lost token recovery)", security: [{ admin: [] }], responses: { '200': { description: "ok" } } }
+  /v2/admin/projects/{key}/server-key/rotate:
+    parameters: [{ name: key, in: path, required: true, schema: { type: string } }]
+    post: { summary: "Admin server-key rotation (on-chain projects only)", security: [{ admin: [] }], responses: { '200': { description: "ok" }, '400': { description: "free-tier-only apps have no server key" } } }
+  /v2/admin/reconcile:
+    post: { summary: "Run the on-chain reconciler once", security: [{ admin: [] }], responses: { '200': { description: "summary" } } }
+  /v2/sponsor:
+    post:
+      summary: "REST sponsorship. X-Api-Key carries the project's server key (backend; any wallet) or client token (needs an allowed Origin); Authorization Bearer carries the Privy access token, REQUIRED for the free tier."
+      security: []
+      requestBody: { required: true, content: { application/json: { schema: { type: object, required: [userOp], properties: { userOp: { type: object } } } } } }
+      responses:
+        '200': { description: "approved - paymaster fields + sponsor {kind, sponsorId} + EntryPoint userOpHash" }
+        '400': { description: "malformed request body (malformed_request, invalid_json), or a bounded-input denial: calldata_decode_failed, gas_limits_out_of_bounds, fee_out_of_bounds, fee_above_onchain_cap, free_pool_op_too_large" }
+        '401': { description: "invalid app/Privy credential (unknown credentials are throttled per IP and are not written to the audit log)" }
+        '403': { description: "forbidden (suspended, origin not allowed, identity required, destination not allowed, project has no per-wallet limit set on-chain, account deployment disabled)" }
+        '413': { description: "request body larger than 256 KiB (body_too_large)" }
+        '429': { description: "per-IP request limit (rate_limited, with Retry-After; checked before the body is read), or a cap / balance / per-wallet limit reason" }
+        '503': { description: "chain unreadable (fail closed)" }
+  /v2/paymaster/{appToken}:
+    parameters: [{ name: appToken, in: path, required: true, schema: { type: string }, description: "client token (publishable; project budget only from allowedOrigins) or server key" }]
+    post:
+      summary: "ERC-7677 JSON-RPC (pm_getPaymasterStubData, pm_getPaymasterData); `context.privyAccessToken` is REQUIRED for the free tier"
+      security: []
+      requestBody: { required: true, content: { application/json: { schema: { type: object } } } }
+      responses: { '200': { description: "JSON-RPC response (errors in body)" } }
+    options: { summary: "CORS preflight", responses: { '204': { description: "ok" } } }

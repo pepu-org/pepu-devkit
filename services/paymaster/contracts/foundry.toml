@@ -1,0 +1,35 @@
+[profile.default]
+src = "src"
+out = "out"
+libs = ["lib"]
+
+# EntryPoint V0.6 and v0.7 *needs* to be built with evm_version set to london.
+# This matches upstream singleton-paymaster's own stated guidance (see its foundry.toml, where this exact
+# solc/evm_version pair is commented in directly above the cancun/0.8.28 default used for their V8 contract),
+# and this monorepo's established convention for contracts deployed to PEPU (see contracts/permit2/foundry.toml,
+# which uses evm_version = "london" for the same reason: this is what PEPU's Nitro/ArbOS instance was validated
+# against).
+solc = "0.8.26"
+evm_version = "london"
+
+optimizer = true
+optimizer_runs = 1000000
+
+# PepuSponsoredPaymasterV7 alone is compiled with 8,000 optimizer runs (everything else, including the DEPLOYED v1
+# PepuVerifyingPaymasterV7 whose creation hash is pinned in deploy-paymaster.sh, keeps 1,000,000). Reason: EIP-170.
+# After the review-3 fixes the contract is 23,722 of 24,576 bytes at 8,000 runs (854 spare) and 25,115 bytes at
+# 1,000,000 runs (cannot be deployed). Measured cost on the real EntryPoint v0.7 harness, 1,000,000 -> 8,000 runs:
+# validatePaymasterUserOp 72,237 -> 72,393 gas (+0.2%), worst-case postOp 13,843 -> 13,918 gas (+0.5%).
+# See services/paymaster/audits/2026-10-review-3.md.
+additional_compiler_profiles = [{ name = "sponsored", optimizer_runs = 8000 }]
+compilation_restrictions = [{ paths = "src/PepuSponsoredPaymasterV7.sol", optimizer_runs = 8000 }]
+
+[fmt]
+bracket_spacing = true
+int_types = "long"
+line_length = 120
+multiline_func_header = "all"
+number_underscore = "thousands"
+quote_style = "double"
+tab_width = 4
+wrap_comments = true

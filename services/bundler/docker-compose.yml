@@ -1,0 +1,61 @@
+# Standalone Alto bundler for PEPU mainnet (chain 97741), for local/dev use.
+# For PRODUCTION hosting use deploy/hosting/docker-compose.yml instead: it adds
+# the Caddy TLS/rate-limit/Origin-allowlist proxy, Docker secrets and the
+# paymaster policy service. Never expose port 4337 of this file to the internet.
+#
+# STATUS: NOT EXECUTED. No Docker daemon was available where this was written
+# (`docker --version` fails), so `docker compose config` and `docker compose up`
+# are unproven. Reproduce the README "Proof of life" checks before relying on it.
+#
+# Image: built from ./Dockerfile = npm @pimlico/alto 0.0.21 (the version proven
+# live; see README) on node:24.4.1-bookworm-slim. The old
+# ghcr.io/pimlicolabs/alto:v1.2.8 image is alto 0.0.20 and is not used.
+#
+# Secrets (ALTO_RPC_URL, ALTO_EXECUTOR_PRIVATE_KEYS) come ONLY from the local,
+# gitignored .env (copy .env.example). Nothing secret is baked into the image.
+services:
+  alto:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: pepu/alto:0.0.21
+    container_name: pepu-alto-bundler
+    restart: unless-stopped
+    user: "1000:1000"
+
+    # Local use: Alto's own CORS (reflects any origin) is wanted by the browser
+    # demo, so mount the dev config over the image's production config.
+    volumes:
+      - ./alto.config.json:/app/alto.config.json:ro
+
+    env_file:
+      - .env
+
+    ports:
+      # Loopback only. Alto is not meant to face the internet (safe-mode is off
+      # and CORS reflects any origin); put the Caddy proxy in front of it.
+      - "127.0.0.1:4337:4337"
+
+    healthcheck:
+      # The container-internal port is 4337 (alto.config.json "port"). The old
+      # probe hit 3000 and could never pass. Alto serves GET /health -> "OK";
+      # Node's built-in fetch is used because the image has no curl/wget.
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:4337/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: true
+    tmpfs:
+      - /tmp

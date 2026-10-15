@@ -1,0 +1,27 @@
+# Force LF everywhere. The sponsored paymaster's pinned creation-bytecode hash covers the
+# solc metadata, which hashes the source text, so a CRLF checkout (Windows core.autocrlf=true)
+# produces a DIFFERENT hash. These rules make an LF checkout independent of local git config.
+* text=auto eol=lf
+
+# Inputs to solc (explicit, in case the catch-all is ever relaxed).
+*.sol text eol=lf
+foundry.toml text eol=lf
+remappings.txt text eol=lf
+.gitmodules text eol=lf
+*.sh text eol=lf
+
+# Binaries: never touch.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.pdf binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.otf binary
+*.eot binary
+*.zip binary
+*.gz binary

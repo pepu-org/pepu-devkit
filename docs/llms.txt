@@ -1,0 +1,159 @@
+# Pepe Unchained V2 Developer Docs
+
+> Developer documentation for Pepe Unchained V2 (PEPU), an Arbitrum Orbit (Nitro) chain operated by Conduit, settling to Ethereum L1. Mainnet chain ID 97741 is where you build. Native gas token PEPU (18 decimals). The dev kit is `@pepu-chain/sdk`, `@pepu-chain/mcp`, `create-pepu-app`, six starter templates and the `pepu-devkit` Claude Code plugin. It is chain tooling for builders, not an "AI chain".
+
+Pepe Unchained V2 is the current chain. An earlier chain ("V1", chain ID 3409, OP Stack) is dead; do not cite its chain ID, RPC or architecture as current. The testnet (97740) is out of scope for development.
+
+Status of the three pillars: Google login to an embedded wallet, Privy session signers, and sponsored transactions are proven on mainnet, and so is their combination (an on-chain Kernel session key plus sponsorship, proven live in a browser on mainnet (2026-10-14) against the hosted bundler and v2 paymaster). The hosted bundler (bundler.pepeunchained.com) and paymaster service (paymaster.pepeunchained.com) are live and proven: a real sponsored operation ran through them on the v2 paymaster. The v2 tiered paymaster is deployed as a canary: internally reviewed 3 times, external audit pending, funded in small tranches. The v1 paymaster is retired.
+
+The whole documentation as one file: [llms-full.txt](https://guide.pepeunchained.com/llms-full.txt).
+
+## Overview
+
+- [Overview](https://guide.pepeunchained.com): Developer documentation for building on Pepe Unchained V2 (Arbitrum Orbit, mainnet chain ID `97741`).
+
+## Get Started
+
+- [What is Pepe Unchained V2](https://guide.pepeunchained.com/get-started/introduction): Pepe Unchained V2 is an Arbitrum Orbit (Nitro) chain, operated by Conduit, settling to Ethereum L1.
+- [V1 vs V2: Which Chain Are You On](https://guide.pepeunchained.com/get-started/v1-vs-v2): Short answer: if you are building today, you are building on V2 — chain ID `97741` (mainnet) / `97740` (testnet), Arbitrum Orbit.
+- [The Three Pillars and How They Combine](https://guide.pepeunchained.com/get-started/pillars): The PEPU dev kit is built around three capabilities that make an app feel like a normal consumer app: Google login to a wallet, session keys, and sponsored transactions.
+- [Quickstart: Zero to a Sponsored Transaction in 10 Minutes](https://guide.pepeunchained.com/get-started/quickstart-app): Copy-paste path from nothing to a running Next.js app on Pepe Unchained V2 that sends a real transaction whose gas someone else pays.
+- [Build with an AI Coding Agent in 3 Minutes](https://guide.pepeunchained.com/get-started/ai-assisted): The fastest path for agent users: install the MCP server, the plugin and the skills, then scaffold and verify an app without leaving the agent.
+- [Network Reference](https://guide.pepeunchained.com/get-started/network-reference): Copy-pasteable network parameters for Pepe Unchained V2. If you landed here from a search engine or an AI assistant and haven't confirmed you're looking at V2 (not the dead V1 chain, ID `3409`), read V1 vs V2 first.
+- [Network Properties](https://guide.pepeunchained.com/get-started/network-properties): This page states plainly what kind of chain Pepe Unchained V2 is, including the parts that are trade-offs rather than selling points.
+
+## Onboarding and Wallets
+
+- [Social Login and Embedded Wallets (Privy)](https://guide.pepeunchained.com/onboarding/privy-embedded-wallets): Pillar 1 of the dev kit: a user signs in with Google (or email) and gets a self-custodial Privy embedded wallet on Pepe Unchained V2, with no seed phrase and no browser extension.
+- [The Two-Address Model](https://guide.pepeunchained.com/onboarding/two-address-model): With gas sponsorship, one user has two addresses. This is the most common source of confusion when people first run the `sponsored-demo` template, so it is worth understanding before you build anything on smart accounts.
+- [Session Keys: No Popup Per Transaction](https://guide.pepeunchained.com/onboarding/session-keys): Pillar 2 of the dev kit. A user approves a limited session once, and your app then acts for them with no wallet popup per action.
+- [Sponsored Transactions](https://guide.pepeunchained.com/onboarding/sponsored-transactions): Pillar 3 of the dev kit: a user with a wallet holding zero PEPU sends a transaction and a paymaster pays the gas.
+- [Sponsored Session: No Popup, No Gas](https://guide.pepeunchained.com/onboarding/sponsored-session): The three onboarding pillars in one flow: sign in with Google, approve one scoped session, then act with no wallet popup and no gas from the user.
+- [Google Login, Session and Sponsorship End to End](https://guide.pepeunchained.com/onboarding/google-session-sponsored): The headline flow of the dev kit: the user signs in with Google, signs once to approve a limited session, and from then on every action runs with no wallet popup and no gas from the user.
+- [Smart Accounts](https://guide.pepeunchained.com/onboarding/smart-accounts): Pepe Unchained V2 has an ERC-4337 foundation deployed on mainnet: both EntryPoint versions, a ZeroDev Kernel v3 smart-account factory, and a v2 sponsored paymaster contract (a canary).
+- [Sponsorship Tiers](https://guide.pepeunchained.com/onboarding/sponsorship-tiers): This page describes the v2 tiered paymaster: a free tier funded by the chain for Privy users, and per-project deposits for everyone else.
+
+## Concepts
+
+- [Architecture: Who Calls What](https://guide.pepeunchained.com/concepts/architecture): One page showing the browser, your Next.js route handlers, Privy, the RPC, the bundler, the paymaster and the EntryPoint, and which credential each hop uses.
+- [Smart Account Paths: Plain Wallet, ZeroDev-Native or Privy Smart Wallets](https://guide.pepeunchained.com/concepts/smart-account-paths): PEPU gives you three ways to send transactions for a user, and two of them involve a smart account.
+- [Trust and Security Model](https://guide.pepeunchained.com/concepts/trust-and-security): States precisely what each mechanism protects against and who is trusted, so builders do not overclaim.
+
+## Privy
+
+- [Privy Configuration Overview](https://guide.pepeunchained.com/privy/index): Everything about configuring Privy for a PEPU app: which feature needs which setting, how the SDK and tools verify settings, and where each detail page lives.
+- [Privy Setup Walkthrough](https://guide.pepeunchained.com/onboarding/privy-setup): This page is the short first-time walkthrough for Privy. The complete table of every dashboard field, with exact values and failure symptoms, is Dashboard Settings, Field by Field; authorization keys are in Authorizat...
+- [Dashboard Settings, Field by Field](https://guide.pepeunchained.com/privy/dashboard-settings): Every Privy dashboard setting a PEPU app depends on, with the exact value, why it matters and the symptom when it is wrong.
+- [Authorization Keys and Key Quorums](https://guide.pepeunchained.com/privy/authorization-keys): The authorization key is the credential your server uses to ask Privy to sign for a user's wallet under a session grant.
+- [Privy Env Vars and Verification](https://guide.pepeunchained.com/privy/env-and-checks): The Privy environment variables, and the three ways to verify a Privy setup: `checkPrivyDashboardConfig`, the `pepu_check_privy_config` MCP tool and `npm run doctor`.
+
+## SDK
+
+- [SDK Overview and Reference](https://guide.pepeunchained.com/sdk/reference): `@pepu-chain/sdk` supplies what viem does not know about Pepe Unchained V2 (chain 97741) and the infrastructure that makes the three pillars work: Google to wallet, session keys and sponsored transactions, plus their...
+- [Core: @pepu-chain/sdk](https://guide.pepeunchained.com/sdk/core): The core entry of `@pepu-chain/sdk`: chain definitions, the contract and DEX registries, ABIs, gas helpers, explorer links, Multicall3 and Permit2 helpers, the error model, endpoint resolution, ERC-7677 request builde...
+- [/privy](https://guide.pepeunchained.com/sdk/privy): `@pepu-chain/sdk/privy` is the client-safe Privy layer: the typed `<PrivyProvider>` config for PEPU, the Privy requirements table, and the dashboard checker.
+- [/privy/react](https://guide.pepeunchained.com/sdk/privy-react): `@pepu-chain/sdk/privy/react` is the React layer for Google to wallet: a PEPU-configured Privy provider, the embedded-wallet hook, the server-provisioning gate, the active-wallet pin and an authenticated `fetch`.
+- [/privy/wagmi](https://guide.pepeunchained.com/sdk/privy-wagmi): `@pepu-chain/sdk/privy/wagmi` is the wagmi layer: a wagmi config for PEPU built with `@privy-io/wagmi`, one provider that mounts Privy, react-query and wagmi in the order Privy requires, and the active-wallet pin.
+- [/privy/server](https://guide.pepeunchained.com/sdk/privy-server): `@pepu-chain/sdk/privy/server` is the server half of Google to wallet: the Privy server client, access-token verification, the authenticated-route helper and the ensure-wallet route factory.
+- [/session](https://guide.pepeunchained.com/sdk/session): `@pepu-chain/sdk/session` is the session-key layer in Privy mode: the user grants your app a scoped, time-bound Privy session signer once, and your server then signs for them with no popup per action.
+- [/session/kernel](https://guide.pepeunchained.com/sdk/session-kernel): `@pepu-chain/sdk/session/kernel` is the on-chain session key: a ZeroDev Kernel permission whose scope is enforced by policy contracts during UserOperation validation.
+- [/aa](https://guide.pepeunchained.com/sdk/aa): `@pepu-chain/sdk/aa` is the sponsored-transactions layer: ERC-4337 bundler and ERC-7677 paymaster clients for PEPU, endpoint probes, UserOperation failure mapping, and receipt decoding.
+- [/paymaster](https://guide.pepeunchained.com/sdk/paymaster): `@pepu-chain/sdk/paymaster` is the typed client for the PEPU paymaster policy service (v1 and v2 REST), the on-chain helpers for v2 projects (claim, configure, deposit, read), and the mapping from denial reasons to `P...
+- [/combo](https://guide.pepeunchained.com/sdk/combo): `@pepu-chain/sdk/combo` is the combination of all three pillars: Google sign-in, one scoped on-chain session, then actions with no popup and no user gas.
+- [/doctor](https://guide.pepeunchained.com/sdk/doctor): `@pepu-chain/sdk/doctor` runs project readiness checks: environment variables, Privy app id format, chain RPC, bundler and paymaster reachability, and the Privy dashboard settings.
+- [Generated API Reference](https://guide.pepeunchained.com/sdk/api-reference): A complete index of every export of `@pepu-chain/sdk` version 0.2.2, one table per import path, derived from the compiled type declarations.
+- [SDK Error Catalog](https://guide.pepeunchained.com/sdk/errors): Everything `@pepu-chain/sdk` throws is a `PepuError` subclass with a stable `code`, a one-sentence `hint` and a `docsUrl`.
+- [Migration Notes](https://guide.pepeunchained.com/sdk/migration): Upgrade notes for `@pepu-chain/sdk`. The only upgrade today is 0.1 to 0.2. It adds subpaths and keeps every 0.1 export, so no code has to change to upgrade, but one helper is deprecated and several hand-rolled pattern...
+
+## MCP
+
+- [MCP Server Overview](https://guide.pepeunchained.com/mcp/index): `@pepu-chain/mcp` is a Model Context Protocol server that gives a coding agent a way to check PEPU-specific facts and run PEPU-specific checks instead of guessing.
+- [Install per Client](https://guide.pepeunchained.com/mcp/install): Exact configuration for each supported client, the environment variables the server reads, and how to confirm the connection.
+- [Tool Reference](https://guide.pepeunchained.com/mcp/tools): All 32 tools of `@pepu-chain/mcp`, derived from the tool registry in `packages/mcp/src/tools`: what each does, its inputs (from the zod schemas), what it returns, the SDK function it uses, its safety properties and an...
+- [Resources and Prompts](https://guide.pepeunchained.com/mcp/resources-and-prompts): The five `pepu://` resources the server exposes and its six prompts: what each is for, its arguments, and how an agent should chain them with the tools.
+
+## Agent Tooling
+
+- [MCP Server and Skills (overview)](https://guide.pepeunchained.com/agent-tooling/mcp-and-skills): This is the hub for the PEPU agent tooling: infrastructure that helps coding agents (Claude Code, Cursor, VS Code and similar) build on Pepe Unchained and get PEPU's specific facts right.
+- [Skills Catalog](https://guide.pepeunchained.com/agent-tooling/skills): The 12 PEPU skills: what each one does, when it triggers, the chain facts they all share, how they use the SDK and the MCP tools instead of hand-rolled code, and the rules for writing a new one.
+- [Claude Code Plugin](https://guide.pepeunchained.com/agent-tooling/plugin): The `pepu-devkit` plugin bundles everything the kit gives a coding agent into one Claude Code install: the `pepu` MCP server, the 12 skills, 6 slash commands and the `pepu-builder` subagent.
+- [AGENTS.md and CLAUDE.md in Templates](https://guide.pepeunchained.com/agent-tooling/agents-md): Every app scaffolded from a PEPU template carries an agent kit: instructions and editor configs that point a coding agent at the SDK and the MCP server.
+
+## Templates and CLI
+
+- [Template Gallery](https://guide.pepeunchained.com/templates/index): Six starter templates, each a complete Next.js app on Pepe Unchained V2 mainnet (chain `97741`) built on `@pepu-chain/sdk`.
+- [Consumer App](https://guide.pepeunchained.com/templates/consumer-app): The `consumer-app` template shows that onchain onboarding can feel like a normal app: sign in with email or Google, get an embedded wallet, see a live PEPU balance and send native PEPU, with no seed phrase and no brow...
+- [Token-Gated App](https://guide.pepeunchained.com/templates/token-gated-app): The `token-gated-app` template signs a user in, then unlocks content when their wallet holds a positive balance of an ERC-20 or an NFT.
+- [NFT Mint](https://guide.pepeunchained.com/templates/nft-mint): The `nft-mint` template is an ERC-721 mint page: connect, see the collection's live mint price and supply, mint with a real transaction and list the tokens the wallet owns.
+- [Game App](https://guide.pepeunchained.com/templates/game-app): The `game-app` template shows how a game can write on-chain on every move without a wallet popup per move.
+- [Sponsored Demo](https://guide.pepeunchained.com/templates/sponsored-demo): The `sponsored-demo` template is the smallest honest browser proof that gas sponsorship works end to end on PEPU.
+- [Sponsored Session App](https://guide.pepeunchained.com/templates/sponsored-session-app): The `sponsored-session-app` template combines all three pillars in one flow: sign in with Google, approve one scoped, time-limited session, then act on Pepe Unchained V2 with no wallet popup and no gas from the user.
+- [create-pepu-app CLI](https://guide.pepeunchained.com/cli/create-pepu-app): `create-pepu-app` scaffolds a PEPU starter template into a new folder: it copies the template, vendors the SDK, writes `.env.local`, adds the agent kit, optionally installs dependencies and runs `git init`, then print...
+
+## Infrastructure
+
+- [Infrastructure Map](https://guide.pepeunchained.com/infra/overview): One page listing every endpoint and address the PEPU dev kit relies on: bundler, paymaster, EntryPoints, Kernel, Multicall3, Permit2 and the CREATE2 deployer, with hosting status.
+- [Bundler Overview](https://guide.pepeunchained.com/infra/bundler/overview): The PEPU bundler is an ERC-4337 bundler for Pepe Unchained V2 mainnet (chain ID `97741`), hosted by PEPU at `https://bundler.pepeunchained.com` and also runnable on your own machine.
+- [Bundler JSON-RPC API](https://guide.pepeunchained.com/infra/bundler/api): Method-by-method reference for the PEPU bundler (Alto, ERC-4337 EntryPoint v0.7, chain `97741`).
+- [Operating the Bundler](https://guide.pepeunchained.com/infra/bundler/operating): Runbook for anyone running the PEPU Alto bundler: locally for development, or as a hosted service.
+- [Paymaster Overview](https://guide.pepeunchained.com/infra/paymaster/overview): The PEPU paymaster lets an app pay gas on behalf of its users. It has two parts: an on-chain contract that holds the gas money and pays the EntryPoint, and an off-chain policy service that decides whether to approve a...
+- [ERC-7677 Methods](https://guide.pepeunchained.com/infra/paymaster/erc7677): The policy service speaks ERC-7677, the paymaster web-service standard. Two JSON-RPC methods, `pm_getPaymasterStubData` and `pm_getPaymasterData`, are what Privy's smart-wallet client and viem's paymaster client call.
+- [REST API v1](https://guide.pepeunchained.com/infra/paymaster/rest-api-v1): Reference for the v1 policy service: `GET /health`, `POST /sponsor`, `POST /paymaster/:appToken` and the admin circuit-breaker reset.
+- [REST API v2](https://guide.pepeunchained.com/infra/paymaster/rest-api-v2): Reference for the tiered sponsorship API (`/v2/*`) of the policy service, derived from `services/paymaster/policy-service/openapi.yaml` and the service source.
+- [Credential Matrix](https://guide.pepeunchained.com/infra/paymaster/auth): Which credential applies to which paymaster call, how to obtain it, and how to rotate it.
+- [Policy, Caps and the Circuit Breaker](https://guide.pepeunchained.com/infra/paymaster/policy-and-caps): What the policy service checks before it signs a sponsorship: the destination allowlist, per-user, per-app and per-project caps, the free-tier numbers and the global circuit breaker, plus how spend is booked.
+- [Register, Deposit and Claim a v2 Project](https://guide.pepeunchained.com/infra/paymaster/v2-register-deposit-claim): Step-by-step procedure for a developer to fund and take ownership of a tiered-paymaster project: derive the project id, deposit, claim with a Privy-verified attestation, configure the allowlist and limits, issue crede...
+- [PepuSponsoredPaymasterV7 Contract](https://guide.pepeunchained.com/infra/paymaster/contracts): Reference for the paymaster contracts: v2 `PepuSponsoredPaymasterV7` (deployed as a canary) and v1 `PepuVerifyingPaymasterV7` (retired): functions, events, errors, roles and timelocks.
+
+## Contracts and Addresses
+
+- [Address Map](https://guide.pepeunchained.com/contracts/address-map): Every contract address in the SDK registry for Pepe Unchained V2 mainnet (chain `97741`), verified live on chain, with a source and a do-not-substitute note for each.
+- [Deployed Contracts Reference](https://guide.pepeunchained.com/contracts/deployed-contracts): The complete, current answer to "does standard contract X exist on Pepe Unchained V2, and where." Every address below is on mainnet (chain `97741`) unless stated otherwise — see Network Reference for why testnet isn't...
+- [The Multicall3 Trap](https://guide.pepeunchained.com/contracts/multicall3): This is the single most important gotcha on Pepe Unchained V2. Read it before you wire up any tooling that reads multiple contracts at once — viem's `multicall()`, wagmi's `useReadContracts`, or anything built on top...
+- [Permit2](https://guide.pepeunchained.com/contracts/permit2): Uniswap's Permit2 is deployed on PEPU mainnet at its canonical address. This page gives the address and the deployment proof, the EIP-712 domain, typed-data examples with the SDK builders, and how it differs from Pepu...
+- [EntryPoints and Kernel](https://guide.pepeunchained.com/contracts/entrypoints-and-kernel): The ERC-4337 contracts on PEPU mainnet: EntryPoint v0.6 and v0.7, the ZeroDev Kernel v3.1 account stack (factory, meta-factory, implementation, ECDSA validator and signer) and the session-key policies, with the ABIs t...
+- [CREATE2 and Deterministic Deployment](https://guide.pepeunchained.com/contracts/create2-and-deterministic-deployment): How PEPU's deterministic deployer was used to put Multicall3 and Permit2 on chain, what salt and init code each used, and how to reproduce the addresses.
+- [PepuSwap Addresses](https://guide.pepeunchained.com/contracts/pepuswap): PepuSwap is PEPU's main DEX, operated by a third party (0sum.io): a white-labelled Uniswap V3 fork.
+- [Deploy and Verify a Contract](https://guide.pepeunchained.com/contracts/deployment): This page takes you from nothing to a deployed, verified contract on Pepe Unchained V2 mainnet.
+- [Paymaster v2 Spec Summary](https://guide.pepeunchained.com/contracts/paymaster-v2-spec): A readable summary of the tiered gas-sponsorship specification (`services/paymaster/SPONSORSHIP-SPEC.md`): model, invariants, trust model, decisions and open items.
+- [Audits and Verification Status](https://guide.pepeunchained.com/contracts/audits): What has and has not been reviewed, tested or verified for each PEPU contract. There has been no external audit of any PEPU-authored contract.
+
+## Recipes
+
+- [Read a Contract](https://guide.pepeunchained.com/recipes/read-a-contract): Call a read-only (`view` or `pure`) function on a deployed contract with the SDK's public client, in a script or a React app.
+- [Send a Transaction](https://guide.pepeunchained.com/recipes/send-a-transaction): Send native PEPU from a key you control (scripts, backend jobs), or from a Privy embedded wallet in a React app (the flow a real user goes through).
+- [Sign with Privy, Broadcast Yourself](https://guide.pepeunchained.com/recipes/sign-with-privy-broadcast-yourself): Recipe: submit a transaction on a user's behalf from your backend, using a Privy session signer, on Pepe Unchained V2.
+- [Provision the Wallet and Pin the Active Account](https://guide.pepeunchained.com/recipes/provision-and-pin-the-wallet): Two things go wrong between "the user signed in with Google" and "the user's wallet is the account the app acts on".
+- [Batch Reads with Multicall3](https://guide.pepeunchained.com/recipes/batch-reads-with-multicall3): Read many values in one request. PEPU has Multicall3, but not at the canonical address, so this recipe uses the SDK to pin the right one.
+- [Add PEPU to a Wallet](https://guide.pepeunchained.com/recipes/add-pepu-to-a-wallet): A one-click "Add Network" for Pepe Unchained V2 mainnet, using the SDK instead of a hand-written `wallet_addEthereumChain` payload.
+- [Deploy an ERC-20](https://guide.pepeunchained.com/recipes/deploy-an-erc20): A standard OpenZeppelin-based ERC-20, deployed and verified on Pepe Unchained V2 mainnet with Foundry.
+- [Gate Content by Token Balance](https://guide.pepeunchained.com/recipes/gate-content-by-token-balance): Show or hide something based on whether the signed-in wallet holds at least some amount of a token, and enforce it on the server where it matters.
+- [Grant a Session](https://guide.pepeunchained.com/recipes/grant-a-session): Grant your app a scoped session so it can act for a signed-in user with no popup per action.
+- [Send a Sponsored Transaction](https://guide.pepeunchained.com/recipes/sponsored-send): Send a transaction from a smart account whose gas is paid by a paymaster, from a script or from a React component.
+- [Sponsored Session in One Flow](https://guide.pepeunchained.com/recipes/sponsored-session): Google sign-in, one owner signature that grants an on-chain session, then actions with no popup and no gas for the user.
+- [Deposit and Claim a Paymaster Project](https://guide.pepeunchained.com/recipes/v2-deposit-and-claim): Register an app with the v2 tiered paymaster, claim its project on-chain, configure its limits and fund it.
+- [Sign a Permit2 Permit](https://guide.pepeunchained.com/recipes/permit2-permit): Sign an EIP-712 Permit2 `PermitSingle` so a spender can pull a token without a separate `approve` transaction per spender, using the SDK's typed-data builders and the canonical Permit2 deployed on PEPU.
+- [Batch Reads with Multicall3 in React](https://guide.pepeunchained.com/recipes/multicall-in-react): Read many values in one request from a React component with wagmi, using PEPU's own Multicall3.
+- [Explorer Links](https://guide.pepeunchained.com/recipes/explorer-links): Build pepuscan links for transactions, addresses, tokens and blocks, and link a sponsored UserOperation correctly.
+
+## Reference
+
+- [Endpoints](https://guide.pepeunchained.com/reference/endpoints): Every endpoint the dev kit talks to, in one table: the public RPC and explorer, and the bundler and paymaster.
+- [Environment Variables](https://guide.pepeunchained.com/reference/env-vars): Every environment variable used by the templates, the SDK, the MCP server and the services: which component reads it, whether it is required, whether it is secret, and a placeholder.
+- [Error Reference](https://guide.pepeunchained.com/reference/errors): Every error code the SDK, the MCP server and the paymaster client can return: what it means, why it happens, how to fix it, the HTTP status route handlers use and whether a retry can help.
+- [Glossary](https://guide.pepeunchained.com/reference/glossary): Terms used across the PEPU docs, alphabetical.
+- [FAQ](https://guide.pepeunchained.com/reference/faq): Short answers to questions builders ask first, with links to the page that has the detail.
+- [Changelog](https://guide.pepeunchained.com/reference/changelog): Dated changes to the dev kit packages and docs, newest first. Each entry lists what a builder can now do, not the commit log.
+
+## Troubleshooting
+
+- [Troubleshooting](https://guide.pepeunchained.com/troubleshooting): Symptoms you can hit while building on Pepe Unchained V2, grouped by the three pillars (Google to wallet, session keys, sponsored transactions), their combination, and the infrastructure underneath.
+
+## Contributing
+
+- [Docs Style Guide and Page Template](https://guide.pepeunchained.com/CONTRIBUTING-DOCS): Rules for writing and editing pages in this folder. The docs are the single source of truth for the PEPU dev kit, so accuracy outranks polish.
+
+## Optional
+
+- [llms-full.txt](https://guide.pepeunchained.com/llms-full.txt): every page above concatenated in table-of-contents order, HTML comments removed.
+- [Error codes](https://guide.pepeunchained.com/reference/errors): every error code with an anchor, `https://guide.pepeunchained.com/reference/errors#<CODE>`.

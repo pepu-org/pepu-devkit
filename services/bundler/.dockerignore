@@ -1,0 +1,17 @@
+# Keep secrets, local state and dev-only files out of the build context/image.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.keys.env
+.throwaway-owner-key.json
+node_modules
+*.log
+.git
+Dockerfile
+docker-compose.yml
+README.md
+AGENTS.md
+scripts
+alto.config.unsafe-diagnostic.json

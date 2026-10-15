@@ -1,0 +1,20 @@
+{
+  "name": "pepu-devkit",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Developer kit for Pepe Unchained V2: @pepu-chain/sdk, @pepu-chain/mcp, create-pepu-app, starter templates, and the pepu-devkit Claude Code plugin.",
+  "license": "MIT",
+  "homepage": "https://guide.pepeunchained.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pepu-org/pepu-devkit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pepu-org/pepu-devkit/issues"
+  },
+  "packageManager": "pnpm@11.25.0",
+  "scripts": {
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck"
+  }
+}

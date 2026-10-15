@@ -1,0 +1,9 @@
+{
+  "_comment": "Copy to allowlist.json (gitignored) and edit. Global destination allowlist: the hard backstop every sponsored UserOp target must appear on, regardless of which app asked. Adding an address means the paymaster will pay gas for calls to it, so list only contracts you have verified and are willing to fund. Remove an entry to stop sponsoring it immediately. The TapScore entry is the public demo contract used by the smoke test; remove it once you no longer need it.",
+  "_entries": {
+    "0x261eA5971B93237a56990206A46Bc80318e4d078": "TapScore (game-app demo contract). Verified on pepuscan. Non-payable tap() only, unbounded per-caller score counter, holds no funds and has no withdrawal path — so the worst case from sponsoring it is wasted gas, not loss of assets. Added to prove end-to-end sponsorship for templates/game-app."
+  },
+  "destinations": [
+    "0x261eA5971B93237a56990206A46Bc80318e4d078"
+  ]
+}

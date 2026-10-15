@@ -1,0 +1,11 @@
+# Install with:  crontab -e   (as the user that runs docker, e.g. "deploy")
+# Paths assume the repo lives in /opt/pepu on the VM.
+
+# Health + deposit + float + certificate checks, alerts to the webhook in monitor.env.
+*/5 * * * * /opt/pepu/deploy/hosting/scripts/healthcheck-alert.sh >> /var/log/pepu-monitor.log 2>&1
+
+# Daily SQLite snapshot (03:17), 14 days kept locally; set BACKUP_UPLOAD_CMD to copy off-box.
+17 3 * * * BACKUP_KEEP_DAYS=14 /opt/pepu/deploy/hosting/scripts/backup-sqlite.sh >> /var/log/pepu-backup.log 2>&1
+
+# Optional: weekly prune of dangling images after upgrades.
+0 4 * * 0 docker image prune -f >/dev/null 2>&1

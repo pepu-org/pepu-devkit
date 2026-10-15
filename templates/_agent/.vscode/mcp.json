@@ -1,0 +1,9 @@
+{
+  "servers": {
+    "pepu": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@pepu-chain/mcp"]
+    }
+  }
+}

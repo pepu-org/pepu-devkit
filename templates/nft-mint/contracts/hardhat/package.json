@@ -1,0 +1,21 @@
+{
+  "name": "pepu-nft-mint-contracts-hardhat",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Hardhat path for the PepuNft ERC-721 contract shipped with this template. Standalone — not part of the pnpm workspace.",
+  "scripts": {
+    "compile": "hardhat compile",
+    "deploy:mainnet": "hardhat run scripts/deploy.ts --network pepuMainnet",
+    "deploy:testnet": "hardhat run scripts/deploy.ts --network pepuTestnet",
+    "verify:mainnet": "hardhat verify --network pepuMainnet"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.7.0"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "dotenv": "^17.4.2",
+    "hardhat": "^2.22.19",
+    "typescript": "^5.9.3"
+  }
+}

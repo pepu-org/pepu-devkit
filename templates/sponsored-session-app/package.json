@@ -1,0 +1,45 @@
+{
+  "name": "pepu-sponsored-session-app",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Sign in with Google, grant a scoped on-chain session once, then act with no wallet popup and no gas: ZeroDev Kernel session key (call policy + expiry enforced on-chain) plus a PEPU paymaster. Starter for create-pepu-app.",
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "prove-session": "tsx scripts/prove-session.ts",
+    "doctor": "node scripts/doctor.mjs"
+  },
+  "dependencies": {
+    "@pepu-chain/sdk": "workspace:*",
+    "@privy-io/node": "^0.34.0",
+    "@privy-io/react-auth": "^3.44.0",
+    "@zerodev/ecdsa-validator": "^5.4.9",
+    "@zerodev/permissions": "^5.6.3",
+    "@zerodev/sdk": "^5.5.10",
+    "next": "^16.3.5",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "server-only": "^0.0.1",
+    "viem": "^2.56.8"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^22.10.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "eslint": "^9.19.0",
+    "eslint-config-next": "^16.3.5",
+    "tailwindcss": "^4.3.3",
+    "tsx": "^4.19.2",
+    "typescript": "^5.9.3",
+    "vitest": "^2.1.9"
+  },
+  "overrides": {
+    "viem": "$viem"
+  }
+}

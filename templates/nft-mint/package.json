@@ -1,0 +1,41 @@
+{
+  "name": "pepu-nft-mint",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Sign in with Privy, mint an ERC-721 on Pepe Unchained V2, and view the tokens you own — plus the Foundry + Hardhat contract behind it. Starter for create-pepu-app.",
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "doctor": "node scripts/doctor.mjs"
+  },
+  "dependencies": {
+    "@pepu-chain/sdk": "workspace:*",
+    "@privy-io/node": "^0.34.0",
+    "@privy-io/react-auth": "^3.44.0",
+    "@privy-io/wagmi": "^4.0.17",
+    "@tanstack/react-query": "^5.103.1",
+    "next": "^16.3.5",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "server-only": "^0.0.1",
+    "viem": "^2.56.8",
+    "wagmi": "^3.7.7"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^22.10.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "eslint": "^9.19.0",
+    "eslint-config-next": "^16.3.5",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9.3"
+  },
+  "overrides": {
+    "viem": "$viem"
+  }
+}

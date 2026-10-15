@@ -1,0 +1,274 @@
+name: CI
+
+# Scope: the `build-typecheck-test` job builds/typechecks/tests the three
+# publishable packages (packages/sdk, packages/mcp, packages/create-pepu-app)
+# and runs the repo consistency checks (design, agent kit, plugin, versions,
+# shared skill files, links). The `templates` job typechecks, lints and builds
+# each of the six templates against the workspace SDK. The `pack` job installs
+# the three tarballs into an empty directory (scripts/check-pack.mjs), the
+# `scaffolds` job scaffolds all six templates outside the workspace and runs
+# npm install, build and typecheck in each (scripts/check-scaffolds.mjs), and
+# the `policy-service` job runs the paymaster policy service tests serially.
+#
+# services/bundler and services/paymaster are not part of the pnpm
+# workspace (see pnpm-workspace.yaml); only the policy service tests run here.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch: {}
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-typecheck-test:
+    name: build, typecheck, test (node ${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        # pnpm 11 (packageManager) itself needs a modern Node, so the pnpm
+        # toolchain runs on 22 and 24. The published packages' engines.node
+        # floor (>=18.17.0) is exercised by the pack and scaffolds jobs, which
+        # install the tarballs with npm.
+        node-version: ["22", "24"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        # Reads the `packageManager` field in package.json
+        # (pnpm@11.25.0) — no version pinned here on purpose, so this
+        # workflow and local dev always agree on which pnpm runs.
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Build order matters: create-pepu-app's build vendors a copy of
+      # @pepu-chain/sdk's dist/ output (scripts/sync-assets.mjs) — see
+      # RELEASING.md for why. This is a build-script
+      # coupling, not a package.json dependency, so pnpm's own
+      # topological-order handling for `-r` does not know about it and
+      # this order is enforced explicitly here instead.
+      - name: Build @pepu-chain/sdk
+        run: pnpm --filter @pepu-chain/sdk build
+
+      - name: Build @pepu-chain/mcp
+        run: pnpm --filter @pepu-chain/mcp build
+
+      - name: Build create-pepu-app
+        run: pnpm --filter create-pepu-app build
+
+      - name: Check design sync
+        run: node templates/scripts/check-design.mjs
+
+      - name: Check agent kit
+        run: node templates/scripts/check-agent-kit.mjs
+
+      # Needs the built SDK (it checks named imports against dist).
+      - name: Check plugin
+        run: node scripts/check-plugin.mjs
+
+      - name: Check versions
+        run: node scripts/check-versions.mjs
+
+      # Windows MAX_PATH: a long tracked path makes `git clone` fail on Windows.
+      - name: Check tracked path length
+        run: node scripts/check-path-length.mjs
+
+      - name: Check shared skill files
+        run: node scripts/sync-skill-shared.mjs --check
+
+      # Both docs checks read the built SDK (error catalog, endpoints, contract registry).
+      - name: Check generated docs are current
+        run: node scripts/gen-docs.mjs --check
+
+      - name: Check docs parity (tools, skills, templates, addresses, counts)
+        run: node scripts/check-docs-parity.mjs
+
+      - name: Check links and anchors
+        run: node scripts/check-links.mjs
+
+      - name: Typecheck @pepu-chain/sdk
+        run: pnpm --filter @pepu-chain/sdk typecheck
+
+      - name: Typecheck @pepu-chain/mcp
+        run: pnpm --filter @pepu-chain/mcp typecheck
+
+      - name: Typecheck create-pepu-app
+        run: pnpm --filter create-pepu-app typecheck
+
+      - name: Test @pepu-chain/sdk
+        run: pnpm --filter @pepu-chain/sdk test
+
+      - name: Test @pepu-chain/mcp
+        run: pnpm --filter @pepu-chain/mcp test
+
+      - name: Test create-pepu-app
+        run: pnpm --filter create-pepu-app test
+
+  templates:
+    name: template ${{ matrix.template }} (typecheck, lint, build)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        template:
+          - consumer-app
+          - game-app
+          - token-gated-app
+          - nft-mint
+          - sponsored-demo
+          - sponsored-session-app
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build @pepu-chain/sdk
+        run: pnpm --filter @pepu-chain/sdk build
+
+      - name: Typecheck
+        run: pnpm --filter ./templates/${{ matrix.template }} typecheck
+
+      - name: Lint
+        run: pnpm --filter ./templates/${{ matrix.template }} lint
+
+      # Pages render a setup screen without a Privy app id, so the build needs no secrets.
+      - name: Build
+        run: pnpm --filter ./templates/${{ matrix.template }} build
+
+  pack:
+    name: tarballs install from an empty directory
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build @pepu-chain/sdk
+        run: pnpm --filter @pepu-chain/sdk build
+
+      - name: Build @pepu-chain/mcp
+        run: pnpm --filter @pepu-chain/mcp build
+
+      - name: Build create-pepu-app
+        run: pnpm --filter create-pepu-app build
+
+      # pnpm pack all three, install SDK then MCP (with the SDK tarball) then
+      # the CLI into an empty temp dir, list MCP tools, run the CLI --list --json.
+      - name: Check packed tarballs
+        run: node scripts/check-pack.mjs
+
+  scaffolds:
+    name: scaffolded templates build outside the monorepo (all six)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build @pepu-chain/sdk
+        run: pnpm --filter @pepu-chain/sdk build
+
+      # Builds the CLI, scaffolds each template into a temp dir outside the
+      # workspace, then npm install, npm run build, npm run typecheck in each.
+      - name: Check scaffolds
+        run: node scripts/check-scaffolds.mjs
+
+  policy-service:
+    name: paymaster policy service tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: services/paymaster/policy-service/package-lock.json
+
+      - name: Install dependencies
+        working-directory: services/paymaster/policy-service
+        run: npm ci
+
+      # vitest.config.ts runs test files serially with a 30s timeout.
+      - name: Test
+        working-directory: services/paymaster/policy-service
+        run: npm test
+
+  # forge-std and OpenZeppelin are vendored under lib/, so no submodule
+  # checkout is needed. Tests run on the local EVM: no RPC and no secrets.
+  forge-tests:
+    name: paymaster contracts (forge build, test)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: stable
+
+      - name: Build
+        working-directory: services/paymaster/contracts
+        run: forge build
+
+      - name: Test
+        working-directory: services/paymaster/contracts
+        run: forge test -vv

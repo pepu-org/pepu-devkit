@@ -1,0 +1,157 @@
+name: Publish to npm
+
+# DISABLED BY DEFAULT / MANUAL-ONLY. This workflow only ever runs when a
+# human explicitly triggers it from the Actions tab (workflow_dispatch) and
+# types the exact confirmation string below. It never fires on a tag push,
+# a release, or any other automatic event — see RELEASING.md for
+# why this repo intentionally has no publish-on-tag workflow yet.
+#
+# Prerequisites before this can succeed even once triggered (see
+# RELEASING.md for the full walkthrough):
+#   1. The `pepu-org` npm organization must exist and this repo's
+#      maintainer must be a member with publish rights.
+#   2. An `NPM_TOKEN` repository secret (an npm "Automation" token scoped
+#      to the pepu-org, or granular token with publish access to
+#      @pepu-chain/sdk and @pepu-chain/mcp and create-pepu-app) must be configured
+#      under Settings -> Secrets and variables -> Actions.
+#   3. Each package's version in packages/<name>/package.json must already
+#      be bumped by hand (or via `pnpm version`) to the version you intend
+#      to publish — this workflow does not bump versions for you.
+#
+# Publishing uses `pnpm publish`, never `npm publish`: only pnpm rewrites
+# `workspace:*` dependency ranges (npm would publish them verbatim and the
+# package would be uninstallable). Each package's `prepack` script copies the
+# root LICENSE in. `scripts/check-pack.mjs` runs first and fails the job if a
+# tarball would not install.
+#
+# Until all three of the above are true, running this workflow will fail
+# at the `pnpm publish` step with an auth error — which is the safe
+# failure mode.
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type PUBLISH (all caps) to confirm you intend to publish to the real, public npm registry'
+        required: true
+      publish_sdk:
+        description: 'Publish @pepu-chain/sdk'
+        type: boolean
+        default: false
+      publish_mcp:
+        description: 'Publish @pepu-chain/mcp'
+        type: boolean
+        default: false
+      publish_cli:
+        description: 'Publish create-pepu-app'
+        type: boolean
+        default: false
+
+jobs:
+  guard:
+    name: Confirm intent
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check confirmation phrase
+        run: |
+          if [ "${{ github.event.inputs.confirm }}" != "PUBLISH" ]; then
+            echo "::error::Confirmation phrase did not match 'PUBLISH' — aborting. This gate exists so a workflow_dispatch click alone can never publish."
+            exit 1
+          fi
+
+  # Publish order: @pepu-chain/sdk first, then @pepu-chain/mcp and create-pepu-app.
+  # See RELEASING.md for why (create-pepu-app's *next* release,
+  # after this repo's dependency-switch documented in
+  # RELEASING.md, is expected to depend on @pepu-chain/sdk
+  # already being resolvable from the registry).
+  publish-sdk:
+    name: Publish @pepu-chain/sdk
+    needs: guard
+    if: github.event.inputs.publish_sdk == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+          registry-url: 'https://registry.npmjs.org'
+      - run: pnpm install --frozen-lockfile
+      # Build in dependency order (the CLI vendors the SDK's dist), then prove
+      # the three tarballs install from an empty directory before publishing any.
+      - run: pnpm --filter @pepu-chain/sdk build
+      - run: pnpm --filter @pepu-chain/mcp build
+      - run: pnpm --filter create-pepu-app build
+      - name: Check tarballs install
+        run: node scripts/check-pack.mjs
+      - run: pnpm --filter @pepu-chain/sdk test
+      - name: "pnpm publish (rewrites workspace ranges and copies LICENSE via prepack)"
+        run: pnpm --filter @pepu-chain/sdk publish --access public --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  publish-mcp:
+    name: Publish @pepu-chain/mcp
+    needs: [guard, publish-sdk]
+    # `always()` so mcp/cli can still run even when publish_sdk was left
+    # false (i.e. this run isn't publishing sdk this time) — only actual
+    # failure of publish-sdk should block these, not it being skipped.
+    if: |
+      always() &&
+      needs.guard.result == 'success' &&
+      (needs.publish-sdk.result == 'success' || needs.publish-sdk.result == 'skipped') &&
+      github.event.inputs.publish_mcp == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+          registry-url: 'https://registry.npmjs.org'
+      - run: pnpm install --frozen-lockfile
+      # Build in dependency order (the CLI vendors the SDK's dist), then prove
+      # the three tarballs install from an empty directory before publishing any.
+      - run: pnpm --filter @pepu-chain/sdk build
+      - run: pnpm --filter @pepu-chain/mcp build
+      - run: pnpm --filter create-pepu-app build
+      - name: Check tarballs install
+        run: node scripts/check-pack.mjs
+      - run: pnpm --filter @pepu-chain/mcp test
+      - name: "pnpm publish (rewrites workspace ranges and copies LICENSE via prepack)"
+        run: pnpm --filter @pepu-chain/mcp publish --access public --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  publish-cli:
+    name: Publish create-pepu-app
+    needs: [guard, publish-sdk]
+    if: |
+      always() &&
+      needs.guard.result == 'success' &&
+      (needs.publish-sdk.result == 'success' || needs.publish-sdk.result == 'skipped') &&
+      github.event.inputs.publish_cli == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+          registry-url: 'https://registry.npmjs.org'
+      - run: pnpm install --frozen-lockfile
+      # Build in dependency order (the CLI vendors the SDK's dist), then prove
+      # the three tarballs install from an empty directory before publishing any.
+      - run: pnpm --filter @pepu-chain/sdk build
+      - run: pnpm --filter @pepu-chain/mcp build
+      - run: pnpm --filter create-pepu-app build
+      - name: Check tarballs install
+        run: node scripts/check-pack.mjs
+      - run: pnpm --filter create-pepu-app test
+      - name: "pnpm publish (rewrites workspace ranges and copies LICENSE via prepack)"
+        run: pnpm --filter create-pepu-app publish --access public --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
