@@ -1,0 +1,4 @@
+@import "tailwindcss";
+/* Shared PEPU design system: tokens, base styles and component classes.
+   Identical in every PEPU template. Palette notes: BRAND.md in the pepu-devkit repo. */
+@import "./pepu-design.css";

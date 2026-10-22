@@ -1,0 +1,33 @@
+{
+  "name": "pepu-paymaster-policy-service",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Off-chain policy/signing service for PEPU's ERC-4337 verifying paymaster (chain 97741). Enforces Privy-auth + economic caps + destination allowlist before signing a SingletonPaymasterV7-style verifying-mode approval. Does not touch the on-chain contract (services/paymaster/contracts/, owned separately).",
+  "type": "module",
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "start": "npm run build && node dist/index.js",
+    "dev": "tsup --watch --onSuccess \"node dist/index.js\"",
+    "reset-circuit-breaker": "npm run build && node dist/cli/reset-circuit-breaker.js",
+    "reset-spend-counters": "npm run build && node dist/cli/reset-spend-counters.js",
+    "hash-api-key": "npm run build && node dist/cli/hash-api-key.js",
+    "monitor-deposit": "npm run build && node dist/cli/monitor-deposit.js"
+  },
+  "dependencies": {
+    "@privy-io/node": "0.34.0",
+    "viem": "2.56.8",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.9",
+    "@types/node": "^22.10.2"
+  }
+}

@@ -1,0 +1,173 @@
+# Production-shaped hosting stack for the PEPU bundler and the v1 paymaster policy service.
+#
+#   Internet -> caddy (80/443, TLS, rate limit, Origin allowlist, body cap)
+#                 |-- bundler.<DOMAIN>   -> alto:4337            (private network only)
+#                 `-- paymaster.<DOMAIN> -> policy-service:8788  (private network only)
+#
+# Only caddy publishes ports to the internet. alto has NO published port at all.
+# policy-service is published on 127.0.0.1 only (for /ready + the monitor + ops).
+# Do not add a ports: entry to alto. Do not scale policy-service.
+#
+# Setup in deploy/hosting/RUNBOOK.md. Quick reference:
+#   cp .env.example .env && cp policy-service.env.example policy-service.env   # then edit
+#   create the secret files under ./secrets (RUNBOOK "Keys and secrets")
+#   cp policy-config/*.example.json -> policy-config/apps.json, allowlist.json   # then edit
+#   docker compose config -q            # validate
+#   docker compose build && docker compose up -d
+#
+# STATUS: NOT EXECUTED. No Docker daemon was available where this was written, so neither
+# `docker compose config` nor `up` has been run against it. RUNBOOK "First deploy" is the proof.
+
+name: pepu-hosting
+
+x-hardening: &hardening
+  restart: unless-stopped
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
+  logging:
+    driver: json-file
+    options:
+      max-size: "20m"
+      max-file: "5"
+
+services:
+  alto:
+    <<: *hardening
+    build:
+      context: ../../services/bundler
+      dockerfile: Dockerfile
+    image: pepu/alto:0.0.21
+    container_name: pepu-alto
+    user: "1000:1000"
+    read_only: true
+    tmpfs:
+      - /tmp
+    environment:
+      ALTO_RPC_URL_FILE: /run/secrets/rpc_url
+      ALTO_EXECUTOR_PRIVATE_KEYS_FILE: /run/secrets/executor_private_keys
+    secrets:
+      - rpc_url
+      - executor_private_keys
+    expose:
+      - "4337"
+    healthcheck:
+      # Container-internal port 4337 (the old standalone file probed 3000 and could never pass).
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:4337/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    stop_grace_period: 20s
+    mem_limit: ${ALTO_MEM_LIMIT:-1536m}
+
+  policy-service:
+    <<: *hardening
+    build:
+      context: ../../services/paymaster/policy-service
+      dockerfile: Dockerfile
+    image: pepu/policy-service:v1
+    # container_name pins this to ONE container: `docker compose up --scale policy-service=2`
+    # is refused. Cap accounting assumes a single process owns the SQLite file.
+    container_name: pepu-policy-service
+    user: "1000:1000"
+    read_only: true
+    tmpfs:
+      - /tmp
+    env_file:
+      - ./policy-service.env
+    environment:
+      NODE_ENV: production
+      PORT: "8788"
+      DB_PATH: /data/policy.db
+      APPS_CONFIG_PATH: /etc/pepu/apps.json
+      ALLOWLIST_CONFIG_PATH: /etc/pepu/allowlist.json
+      PAYMASTER_SIGNER_PRIVATE_KEY_FILE: /run/secrets/paymaster_signer_private_key
+      PRIVY_APP_SECRET_FILE: /run/secrets/privy_app_secret
+      ADMIN_TOKEN_FILE: /run/secrets/admin_token
+      RPC_URL_FILE: /run/secrets/rpc_url
+      # Must be shorter than stop_grace_period below.
+      SHUTDOWN_TIMEOUT_MS: "10000"
+    secrets:
+      - paymaster_signer_private_key
+      - privy_app_secret
+      - admin_token
+      - rpc_url
+    volumes:
+      # Persistent state: event log, audit trail, circuit breaker, reconciler cursor.
+      - policy-data:/data
+      # Operator-owned app registry + destination allowlist (read-only).
+      - ./policy-config:/etc/pepu:ro
+      # Host dir for SQLite snapshots written by scripts/backup-sqlite.sh (must be writable by uid 1000).
+      - ./backups:/backups
+    ports:
+      # Loopback only: the monitor polls /ready here; Caddy blocks /ready and /admin publicly.
+      - "127.0.0.1:${POLICY_LOOPBACK_PORT:-18788}:8788"
+    stop_grace_period: 20s
+    mem_limit: ${POLICY_MEM_LIMIT:-512m}
+
+  caddy:
+    <<: *hardening
+    build:
+      context: ./caddy
+      dockerfile: Dockerfile
+    image: pepu/caddy-ratelimit:2.10.2
+    container_name: pepu-caddy
+    depends_on:
+      alto:
+        condition: service_healthy
+      policy-service:
+        condition: service_healthy
+    cap_add:
+      - NET_BIND_SERVICE
+    read_only: true
+    tmpfs:
+      - /tmp
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      DOMAIN: ${DOMAIN:?set DOMAIN in .env}
+      ACME_EMAIL: ${ACME_EMAIL:?set ACME_EMAIL in .env}
+      ALLOWED_ORIGIN_REGEX: ${ALLOWED_ORIGIN_REGEX:?set ALLOWED_ORIGIN_REGEX in .env}
+      BUNDLER_SHARED_SECRET: ${BUNDLER_SHARED_SECRET:-}
+      RATE_BUNDLER_EVENTS: ${RATE_BUNDLER_EVENTS:-300}
+      RATE_PAYMASTER_EVENTS: ${RATE_PAYMASTER_EVENTS:-120}
+      RATE_SPONSOR_EVENTS: ${RATE_SPONSOR_EVENTS:-60}
+      MAX_BODY: ${MAX_BODY:-256KB}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      # Certificates and ACME account: losing this volume means re-issuing (rate limits apply).
+      - caddy-data:/data
+      - caddy-config:/config
+    mem_limit: ${CADDY_MEM_LIMIT:-256m}
+
+volumes:
+  policy-data:
+    name: pepu_policy_data
+  caddy-data:
+    name: pepu_caddy_data
+  caddy-config:
+    name: pepu_caddy_config
+
+secrets:
+  # File-based secrets: mounted read-only at /run/secrets/<name>, never in `docker inspect`.
+  # The files must be readable by uid 1000: `sudo chown 1000:1000 secrets/* && chmod 400 secrets/*`.
+  rpc_url:
+    file: ./secrets/rpc_url
+  executor_private_keys:
+    file: ./secrets/executor_private_keys
+  paymaster_signer_private_key:
+    file: ./secrets/paymaster_signer_private_key
+  privy_app_secret:
+    file: ./secrets/privy_app_secret
+  admin_token:
+    file: ./secrets/admin_token

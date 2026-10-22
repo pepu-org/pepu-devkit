@@ -1,0 +1,26 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="theme.css">
+<style>.sdk{text-align:center;background:linear-gradient(90deg,var(--g600),var(--g500));border-color:var(--g400)}
+.sdk h3{color:var(--on-brand)}.sdk p{color:#06200a;font-weight:600}
+.small{font-size:12px;color:var(--ink-muted);margin-top:6px}
+.addr{font-family:var(--mono);font-size:12px;color:var(--lime)}
+.chain{text-align:center;border-radius:999px;padding:16px;background:linear-gradient(180deg,var(--overlay),var(--raised));border:1px solid var(--g500)}
+.chain h3{margin:0}
+.col{display:flex;flex-direction:column}.col .down{width:100%}</style>
+<body><div id="frame">
+<div class="head"><img src="../../../templates/_design/assets/pepu-logo.svg"><div><div class="eyebrow">Who calls what</div><h1 class="title">Architecture</h1></div></div>
+<div class="row"><div class="card"><div class="tag">Your app · browser</div><h3>Browser</h3><p>PepuPrivyProvider, SDK react hooks, owner signatures</p></div>
+<div class="card"><div class="tag">Your app · server</div><h3>Next.js route handlers</h3><p>SDK server entries: verify token, ensure wallet, hold session keys</p></div></div>
+<div class="down"><span>imports</span></div>
+<div class="card sdk"><h3 style="font-size:24px">@pepu-chain/sdk</h3><p>/privy · /session · /aa · /combo · /paymaster · /doctor</p></div>
+<div class="down"></div>
+<div class="row" style="align-items:stretch">
+<div class="card"><div class="tag">Login and keys</div><h3>Privy</h3><p>Google login, embedded wallet, signing, policies</p></div>
+<div class="col"><div class="card" style="flex:1"><div class="tag">ERC-4337 v0.7</div><h3>Hosted bundler</h3><p class="addr">bundler.pepeunchained.com</p><p class="small">Accepts UserOperations, submits via the EntryPoint</p></div><div class="down"><span>handleOps</span></div></div>
+<div class="col"><div class="card" style="flex:1"><div class="tag">ERC-7677 policy service</div><h3>Paymaster service</h3><p class="addr">paymaster.pepeunchained.com</p><p class="small">Checks the rules, then signs the approval</p></div><div class="down"><span>signature</span></div></div></div>
+<div class="row" style="align-items:center">
+<div></div>
+<div class="card feat"><div class="tag">Validates and executes</div><h3>EntryPoint v0.7</h3><p class="addr">0x0000000071727De2…7da032</p></div>
+<div style="display:flex;align-items:center"><div class="right" style="width:104px"><span>charges deposit</span></div><div class="card" style="flex:1"><div class="tag">Pays from its deposit</div><h3>v2 paymaster contract</h3><p class="addr">0xdb28…C30D</p></div></div></div>
+<div class="down"><span>Kernel account runs the call and its session policies</span></div>
+<div class="chain"><h3>PEPU mainnet · chain 97741</h3><p class="small" style="margin:2px 0 0">Arbitrum Orbit · RPC by Conduit · explorer pepuscan.com</p></div>
+<div class="foot"><span>Privy holds the keys, the paymaster pays the gas, the chain enforces the session</span><span>concepts/architecture</span></div></div>

@@ -1,0 +1,14 @@
+# Belt-and-suspenders: the pepu repo root .gitignore already ignores .env
+# anywhere in the tree, but this service should be safe to copy/vendor
+# elsewhere on its own, so it carries its own ignore rules too.
+.env
+.env.*
+!.env.example
+node_modules/
+*.log
+
+# Disposable throwaway signer key generated/cached by
+# scripts/estimate-kernel-userop.mjs for manual verification runs. Controls
+# no funds directly (the smart account it signs for is what holds a
+# balance), but there is no reason to ever commit it either.
+.throwaway-owner-key.json

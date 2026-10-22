@@ -1,0 +1,241 @@
+# Edge proxy for the hosted PEPU bundler and v1 paymaster policy service.
+#
+#   bundler.<DOMAIN>    -> alto:4337            (ERC-4337 JSON-RPC)
+#   paymaster.<DOMAIN>  -> policy-service:8788  (ERC-7677 JSON-RPC + /sponsor)
+#
+# WHY THIS EXISTS. Port 4337 must NEVER be reachable directly:
+#   - Alto runs with safe-mode=false (an upstream 0.0.21 bug, see
+#     services/bundler/README.md "The safe-mode bug"), so it does not do the
+#     full ERC-7562 sandbox validation of submitted ops;
+#   - Alto's enable-cors flag is boolean-only and reflects ANY origin. The hosted
+#     Alto config therefore turns it off and THIS file owns CORS with an allowlist;
+#   - neither service has per-IP rate limiting or a body-size cap of its own that
+#     fits an internet-facing deployment.
+# So Caddy provides: automatic TLS, per-IP rate limits, a request body cap, an
+# Origin allowlist, an optional shared secret for the bundler, a path allowlist
+# (everything not listed is a 404; /admin/*, /v2/*, /ready, /metrics are never
+# proxied) and log redaction (the paymaster URL path carries the app token).
+#
+# REQUIRES the caddy-ratelimit module (not in stock Caddy): ./caddy/Dockerfile
+# builds it in with xcaddy. To run without it, delete the rate_limit blocks and
+# put a different per-IP limiter in front; do not run unlimited.
+#
+# Environment (all passed by docker-compose.yml from .env):
+#   DOMAIN, ACME_EMAIL               hostnames + Let's Encrypt contact
+#   ALLOWED_ORIGIN_REGEX             anchored regex of browser origins, e.g.
+#                                    ^https://(app[.]example[.]com|dash[.]example[.]com)$
+#   BUNDLER_SHARED_SECRET            optional; non-empty => server callers must
+#                                    send header X-Pepu-Bundler-Key: <secret>
+#   RATE_BUNDLER_EVENTS / RATE_PAYMASTER_EVENTS / RATE_SPONSOR_EVENTS
+#                                    requests per minute per client IP
+#   MAX_BODY                         request body cap, default 256KB (the
+#                                    policy service itself caps at 256 KiB)
+#
+# VERIFIED: stock Caddy 2.10.2 (Windows binary) parses this file, and against a mock
+# backend with the rate_limit blocks removed it returned the expected status for the
+# Origin allowlist (403/204 + CORS headers), shared secret (401/200), path allowlist
+# (/admin, /ADMIN, //localhost/admin, /ready, /v2, /metrics -> 404), body cap (413) and
+# redacted logs (/paymaster/REDACTED). NOT VERIFIED: the rate_limit directive itself
+# (needs the xcaddy build in ./caddy/Dockerfile; syntax follows github.com/mholt/caddy-ratelimit)
+# and TLS issuance. Run the RUNBOOK section 6 and 7 checks on the real host.
+{
+	email {$ACME_EMAIL}
+	servers {
+		timeouts {
+			read_header 10s
+			read_body 20s
+			write 60s
+			idle 2m
+		}
+	}
+}
+
+# Shared hardening: body cap, security headers, redacted JSON access logs.
+(hardening) {
+	request_body {
+		max_size {$MAX_BODY:256KB}
+	}
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "no-referrer"
+		-Server
+	}
+	log {
+		output stdout
+		format filter {
+			wrap json
+			fields {
+				# The paymaster app token lives in the URL path: never log it.
+				request>uri regexp (?i)^/paymaster/[^/?]+ /paymaster/REDACTED
+				request>headers>Authorization replace REDACTED
+				request>headers>X-Api-Key replace REDACTED
+				request>headers>X-Admin-Token replace REDACTED
+				request>headers>X-Pepu-Bundler-Key replace REDACTED
+				request>headers>Cookie delete
+			}
+		}
+	}
+}
+
+# A browser sent an Origin that is not on the allowlist. Requests with NO Origin
+# header (server-side callers, curl) are not browsers and fall through: they are
+# governed by the rate limit, the shared secret and (for the paymaster) the app
+# token. Origin is not authentication; it only stops other websites' visitors from
+# using our endpoints through their browsers.
+(origin_allowlist) {
+	@bad_origin {
+		header Origin *
+		not header_regexp Origin {$ALLOWED_ORIGIN_REGEX}
+	}
+	handle @bad_origin {
+		respond "origin not allowed" 403
+	}
+}
+
+# ---------------------------------------------------------------------------
+# Bundler: https://bundler.<DOMAIN>
+# ---------------------------------------------------------------------------
+bundler.{$DOMAIN} {
+	import hardening
+	import origin_allowlist
+
+	# CORS for allowlisted browser origins (Alto's own CORS is off in this deployment).
+	@good_origin {
+		header Origin *
+		header_regexp Origin {$ALLOWED_ORIGIN_REGEX}
+	}
+	header @good_origin {
+		Access-Control-Allow-Origin "{http.request.header.Origin}"
+		Access-Control-Allow-Methods "POST, OPTIONS"
+		Access-Control-Allow-Headers "Content-Type"
+		Access-Control-Max-Age "600"
+		Vary Origin
+	}
+
+	# Preflights carry no custom headers, so they are answered before the shared-secret check.
+	@preflight method OPTIONS
+	handle @preflight {
+		respond 204
+	}
+
+	# Liveness for external uptime checkers (exempt from the shared secret). Alto's /metrics is NOT proxied.
+	@health {
+		method GET
+		path /health
+	}
+	handle @health {
+		reverse_proxy alto:4337
+	}
+
+	# Optional shared secret (server-side callers only: a browser bundle cannot
+	# keep a secret). Disabled while BUNDLER_SHARED_SECRET is empty.
+	@no_key expression `"{$BUNDLER_SHARED_SECRET:}" != "" && {http.request.header.X-Pepu-Bundler-Key} != "{$BUNDLER_SHARED_SECRET:}"`
+	handle @no_key {
+		respond "unauthorized" 401
+	}
+
+	# Header auth is the only shared-secret mechanism here (one thing to reason about).
+	# A client that can only configure a bare URL cannot use it; give such a client
+	# the paymaster-style approach instead: a dedicated hostname + Origin allowlist.
+
+	# JSON-RPC: Alto serves POST /, /rpc and /<version>/rpc.
+	@rpc {
+		method POST
+		path_regexp ^/(rpc|v[0-9]+/rpc)?$
+	}
+	handle @rpc {
+		route {
+			rate_limit {
+				zone bundler_per_ip {
+					key {http.request.remote.host}
+					events {$RATE_BUNDLER_EVENTS:300}
+					window 1m
+				}
+			}
+			reverse_proxy alto:4337 {
+				transport http {
+					dial_timeout 5s
+					response_header_timeout 60s
+				}
+			}
+		}
+	}
+
+	handle {
+		respond "not found" 404
+	}
+}
+
+# ---------------------------------------------------------------------------
+# Paymaster policy service: https://paymaster.<DOMAIN>
+# ---------------------------------------------------------------------------
+paymaster.{$DOMAIN} {
+	import hardening
+
+	# Admin and internal surfaces are never reachable through the proxy. Operators
+	# use them from the VM (docker compose exec / loopback port) only.
+	@blocked path /admin /admin/* /v2 /v2/* /ready /ready/* /metrics
+	handle @blocked {
+		respond "not found" 404
+	}
+
+	import origin_allowlist
+
+	# ERC-7677 JSON-RPC: POST /paymaster/<appToken> (+ OPTIONS preflight, answered by
+	# the service itself using PAYMASTER_RPC_ALLOWED_ORIGINS). Rate-limited per IP
+	# including preflights.
+	@paymaster path_regexp ^/paymaster/[^/]+$
+	handle @paymaster {
+		route {
+			rate_limit {
+				zone paymaster_per_ip {
+					key {http.request.remote.host}
+					events {$RATE_PAYMASTER_EVENTS:120}
+					window 1m
+				}
+			}
+			reverse_proxy policy-service:8788 {
+				transport http {
+					dial_timeout 5s
+					response_header_timeout 30s
+				}
+			}
+		}
+	}
+
+	# Legacy REST sponsorship: POST /sponsor (Privy access token + X-Api-Key).
+	@sponsor {
+		method POST
+		path /sponsor
+	}
+	handle @sponsor {
+		route {
+			rate_limit {
+				zone sponsor_per_ip {
+					key {http.request.remote.host}
+					events {$RATE_SPONSOR_EVENTS:60}
+					window 1m
+				}
+			}
+			reverse_proxy policy-service:8788 {
+				transport http {
+					dial_timeout 5s
+					response_header_timeout 30s
+				}
+			}
+		}
+	}
+
+	@health {
+		method GET
+		path /health
+	}
+	handle @health {
+		reverse_proxy policy-service:8788
+	}
+
+	handle {
+		respond "not found" 404
+	}
+}

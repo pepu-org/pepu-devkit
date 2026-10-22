@@ -1,0 +1,12 @@
+$schema: https://api.gitbook.com/gitbook-docs.yaml
+version: 1
+site:
+  title: Pepe Unchained Developer Docs
+  structure:
+    - type: space
+      key: space-developer-docs
+      title: Developer Docs
+      path: docs
+      default: true
+      content:
+        directory: ./docs

@@ -1,0 +1,41 @@
+{
+  "name": "pepu-devkit",
+  "displayName": "Pepe Unchained (PEPU) Dev Kit",
+  "version": "0.4.4",
+  "description": "Builder infrastructure for Pepe Unchained (PEPU) V2 mainnet (chain 97741): a PEPU MCP server (33 tools, resources and prompts), 12 skills, 6 slash commands and a builder subagent. Everything is built on @pepu-chain/sdk: Google login with an embedded wallet, Privy session signers, sponsored transactions, and the combination (Google login, one on-chain session, no popups, no user gas). Scaffolds apps with create-pepu-app.",
+  "license": "MIT",
+  "author": {
+    "name": "Pepe Unchained",
+    "email": "contact@pepeunchained.com",
+    "url": "https://pepeunchained.com"
+  },
+  "homepage": "https://docs.pepeunchained.com",
+  "repository": "https://github.com/pepu-org/pepu-devkit",
+  "keywords": [
+    "pepu",
+    "pepe-unchained",
+    "arbitrum-orbit",
+    "blockscout",
+    "privy",
+    "google-login",
+    "erc-4337",
+    "account-abstraction",
+    "session-keys",
+    "sponsored-transactions",
+    "web3"
+  ],
+  "mcpServers": {
+    "pepu": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@pepu-chain/mcp@^0.2"
+      ],
+      "env": {
+        "PEPU_RPC_URL": "${PEPU_RPC_URL:-}",
+        "PEPU_BUNDLER_URL": "${PEPU_BUNDLER_URL:-}",
+        "PEPU_PAYMASTER_URL": "${PEPU_PAYMASTER_URL:-}"
+      }
+    }
+  }
+}

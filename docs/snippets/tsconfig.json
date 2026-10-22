@@ -1,0 +1,111 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "types": [
+      "node"
+    ],
+    "typeRoots": [
+      "../../packages/sdk/node_modules/@types"
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@pepu-chain/sdk": [
+        "../../packages/sdk/dist/index.d.ts"
+      ],
+      "@pepu-chain/sdk/react": [
+        "../../packages/sdk/dist/react.d.ts"
+      ],
+      "@pepu-chain/sdk/server": [
+        "../../packages/sdk/dist/server.d.ts"
+      ],
+      "@pepu-chain/sdk/doctor": [
+        "../../packages/sdk/dist/doctor.d.ts"
+      ],
+      "@pepu-chain/sdk/privy": [
+        "../../packages/sdk/dist/privy.d.ts"
+      ],
+      "@pepu-chain/sdk/privy/react": [
+        "../../packages/sdk/dist/privy/react.d.ts"
+      ],
+      "@pepu-chain/sdk/privy/wagmi": [
+        "../../packages/sdk/dist/privy/wagmi.d.ts"
+      ],
+      "@pepu-chain/sdk/privy/server": [
+        "../../packages/sdk/dist/privy/server.d.ts"
+      ],
+      "@pepu-chain/sdk/session": [
+        "../../packages/sdk/dist/session.d.ts"
+      ],
+      "@pepu-chain/sdk/session/server": [
+        "../../packages/sdk/dist/session/server.d.ts"
+      ],
+      "@pepu-chain/sdk/session/react": [
+        "../../packages/sdk/dist/session/react.d.ts"
+      ],
+      "@pepu-chain/sdk/session/kernel": [
+        "../../packages/sdk/dist/session/kernel.d.ts"
+      ],
+      "@pepu-chain/sdk/aa": [
+        "../../packages/sdk/dist/aa.d.ts"
+      ],
+      "@pepu-chain/sdk/aa/kernel": [
+        "../../packages/sdk/dist/aa/kernel.d.ts"
+      ],
+      "@pepu-chain/sdk/aa/react": [
+        "../../packages/sdk/dist/aa/react.d.ts"
+      ],
+      "@pepu-chain/sdk/aa/react-direct": [
+        "../../packages/sdk/dist/aa/react-direct.d.ts"
+      ],
+      "@pepu-chain/sdk/paymaster": [
+        "../../packages/sdk/dist/paymaster.d.ts"
+      ],
+      "@pepu-chain/sdk/paymaster/server": [
+        "../../packages/sdk/dist/paymaster/server.d.ts"
+      ],
+      "@pepu-chain/sdk/combo": [
+        "../../packages/sdk/dist/combo.d.ts"
+      ],
+      "@pepu-chain/sdk/combo/react": [
+        "../../packages/sdk/dist/combo/react.d.ts"
+      ],
+      "react": [
+        "../../packages/sdk/node_modules/@types/react"
+      ],
+      "react/*": [
+        "../../packages/sdk/node_modules/@types/react/*"
+      ],
+      "viem": [
+        "../../packages/sdk/node_modules/viem"
+      ],
+      "viem/*": [
+        "../../packages/sdk/node_modules/viem/*"
+      ],
+      "wagmi": [
+        "../../packages/sdk/node_modules/wagmi"
+      ],
+      "@privy-io/react-auth": [
+        "../../packages/sdk/node_modules/@privy-io/react-auth"
+      ]
+    }
+  },
+  "include": [
+    "*.ts",
+    "*.tsx"
+  ]
+}

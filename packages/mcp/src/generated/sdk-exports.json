@@ -1,0 +1,2310 @@
+{
+  "sdkVersion": "0.2.4",
+  "subpaths": {
+    "@pepu-chain/sdk": [
+      {
+        "name": "addressUrl",
+        "kind": "function",
+        "summary": "Build an address-page URL."
+      },
+      {
+        "name": "ARB_GAS_INFO_ADDRESS",
+        "kind": "value",
+        "summary": "Fixed address of the `ArbGasInfo` precompile."
+      },
+      {
+        "name": "arbGasInfoAbi",
+        "kind": "value",
+        "summary": "Arbitrum Nitro's `ArbGasInfo` precompile — lives at the same fixed address on every Arbitrum Orbit/Nitro chain, including PEPU."
+      },
+      {
+        "name": "assertNotCanonicalMulticall3",
+        "kind": "function",
+        "summary": "Guard: throws `MULTICALL3_CANONICAL_ADDRESS` if `address` is the canonical Multicall3 address (which has no code on PEPU)."
+      },
+      {
+        "name": "blockUrl",
+        "kind": "function",
+        "summary": "Build a block-page URL, by block number or block hash."
+      },
+      {
+        "name": "buildPaymasterContext",
+        "kind": "function",
+        "summary": "ERC-7677 paymaster web-service types, for the two JSON-RPC methods PEPU's paymaster policy service implements: `pm_getPaymasterStubData` and `pm_getPaymasterData`."
+      },
+      {
+        "name": "buildPaymasterDataRequest",
+        "kind": "function",
+        "summary": "Build a `pm_getPaymasterData` JSON-RPC request body."
+      },
+      {
+        "name": "BuildPaymasterRequestOptions",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "buildPaymasterStubDataRequest",
+        "kind": "function",
+        "summary": "Defaults to PEPU mainnet's EntryPoint v0.7."
+      },
+      {
+        "name": "buildPermitSingleTypedData",
+        "kind": "function",
+        "summary": "Typed-data definition accepted by viem `signTypedData`."
+      },
+      {
+        "name": "buildPermitTransferFromTypedData",
+        "kind": "function",
+        "summary": "Typed data for Permit2 SignatureTransfer `PermitTransferFrom`."
+      },
+      {
+        "name": "CANONICAL_MULTICALL3_ADDRESS",
+        "kind": "value",
+        "summary": "The canonical Multicall3 address, which is NOT deployed on PEPU."
+      },
+      {
+        "name": "checkSponsorship",
+        "kind": "function",
+        "summary": "Live sponsorship report from {@link checkSponsorship}."
+      },
+      {
+        "name": "CheckSponsorshipOptions",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "ContractEntry",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "createPepuscanClient",
+        "kind": "function",
+        "summary": "A minimal client for pepuscan's (Blockscout's) public REST API — deliberately narrow: **verified-ABI and token-metadata reads only**."
+      },
+      {
+        "name": "decodeAggregate3Result",
+        "kind": "function",
+        "summary": "Decode the return data of `aggregate3`."
+      },
+      {
+        "name": "DEFAULT_MAX_SEND_MARGIN_BPS",
+        "kind": "value",
+        "summary": "Default safety margin applied on top of a raw gas estimate before {@link maxSendableAmount} computes its answer, in basis points (`2000` = 20%)."
+      },
+      {
+        "name": "DeployedContract",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "DualFeeModelExplanation",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "encodeAggregate3",
+        "kind": "function",
+        "summary": "ABI-encode a Multicall3 `aggregate3` call."
+      },
+      {
+        "name": "entryPointV07Abi",
+        "kind": "value",
+        "summary": "ERC-4337 EntryPoint v0.7 ABI — the subset a dapp actually needs to manage a smart account's gas deposit and read its nonce, at the canonical address `0x0000000071727De22E5E9d8BAf0edAc6f37da032` (deployed on PEPU mainn..."
+      },
+      {
+        "name": "erc20Abi",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "erc721Abi",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "ERC7579_MODULE_TYPE",
+        "kind": "value",
+        "summary": "ERC-7579 module type IDs (EIP-7579 §Module Types)."
+      },
+      {
+        "name": "Erc7677UserOperation",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "ErrorCatalogEntry",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "errorDocsUrl",
+        "kind": "function",
+        "summary": "`https://docs.pepeunchained.com/reference/errors#<CODE>`"
+      },
+      {
+        "name": "ErrorExplanation",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "estimateTransactionCost",
+        "kind": "function",
+        "summary": "Result of {@link estimateTransactionCost}."
+      },
+      {
+        "name": "explainDualFeeModel",
+        "kind": "function",
+        "summary": "Plain-English explanation of Arbitrum Nitro's dual-fee model, as it currently behaves on PEPU."
+      },
+      {
+        "name": "explainError",
+        "kind": "function",
+        "summary": "Explain an error, an error message, or raw revert data (`0x...`)."
+      },
+      {
+        "name": "explorerLinks",
+        "kind": "function",
+        "summary": "Convenience bundle of explorer links."
+      },
+      {
+        "name": "ExplorerResourceType",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "explorerUrl",
+        "kind": "function",
+        "summary": "Resource types supported by Blockscout's URL scheme."
+      },
+      {
+        "name": "formatPepu",
+        "kind": "function",
+        "summary": "Options for {@link formatPepu}."
+      },
+      {
+        "name": "formatPepuGasPrice",
+        "kind": "function",
+        "summary": "Format a wei-per-gas price for display, with an explicit note that PEPU's baseline (~12,500 gwei) is not a congestion spike — see {@link explainDualFeeModel}."
+      },
+      {
+        "name": "FormatPepuOptions",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "formatUnitsCompact",
+        "kind": "function",
+        "summary": "Format any token amount (smallest unit) as a short decimal string, for any `decimals`."
+      },
+      {
+        "name": "getContract",
+        "kind": "function",
+        "summary": "Look up one contract entry for a chain id."
+      },
+      {
+        "name": "getErrorEntry",
+        "kind": "function",
+        "summary": "Look up a catalog entry by code."
+      },
+      {
+        "name": "getKernelAccountAddress",
+        "kind": "function",
+        "summary": "Compute (or confirm) the counterfactual address of a Kernel v3 smart account via the verified factory's `getAddress(data, salt)` — a thin, typed pass-through, not a re-implementation."
+      },
+      {
+        "name": "getMulticall3",
+        "kind": "function",
+        "summary": "The PEPU-specific Multicall3 registry entry."
+      },
+      {
+        "name": "getNitroFeeBreakdown",
+        "kind": "function",
+        "summary": "PEPU's two-part Nitro gas price, read live from the `ArbGasInfo` precompile (`0x...6C`, fixed on every Arbitrum Orbit/Nitro chain)."
+      },
+      {
+        "name": "getPepuAddresses",
+        "kind": "function",
+        "summary": "One row of the address table returned by {@link getPepuAddresses}."
+      },
+      {
+        "name": "getPepuAddressMap",
+        "kind": "function",
+        "summary": "The same rows as {@link getPepuAddresses}, keyed by contract name instead of returned as an array."
+      },
+      {
+        "name": "getPepuKernelStack",
+        "kind": "function",
+        "summary": "The account-abstraction contracts a Kernel v3 smart account needs, narrowed to their {@link DeployedContract} form for a given chain."
+      },
+      {
+        "name": "getPepuSwapContract",
+        "kind": "function",
+        "summary": "PepuSwap is PEPU's flagship DEX and a Uniswap V3 fork."
+      },
+      {
+        "name": "getPermit2",
+        "kind": "function",
+        "summary": "The canonical Permit2 registry entry (`0x000000000022D473...78BA3`)."
+      },
+      {
+        "name": "getPublicClient",
+        "kind": "function",
+        "summary": "Create a viem `PublicClient` for a Pepe Unchained V2 chain, defaulting its transport to the chain's first `rpcUrls.default.http` entry."
+      },
+      {
+        "name": "getSponsorshipStatus",
+        "kind": "function",
+        "summary": "Legacy static gas-sponsorship status for PEPU."
+      },
+      {
+        "name": "GetSponsorshipStatusOptions",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "hostedFreeTierUrl",
+        "kind": "function",
+        "summary": "The public free-tier state route on the hosted paymaster (`GET`, no credentials)."
+      },
+      {
+        "name": "isDeployed",
+        "kind": "function",
+        "summary": "Narrow a {@link ContractEntry} to {@link DeployedContract}."
+      },
+      {
+        "name": "isHostedSponsorshipLive",
+        "kind": "function",
+        "summary": "True once the hosted bundler and the hosted paymaster service have URLs in {@link PEPU_HOSTED}."
+      },
+      {
+        "name": "isPepuChain",
+        "kind": "function",
+        "summary": "Union type of the two Pepe Unchained V2 chain definitions."
+      },
+      {
+        "name": "KERNEL_V3_1_IMPLEMENTATION_ADDRESS",
+        "kind": "value",
+        "summary": "The verified Kernel v3.1 singleton implementation address that `kernelFactoryAbi`'s `implementation()` resolves to on PEPU mainnet."
+      },
+      {
+        "name": "kernelEcdsaValidatorAbi",
+        "kind": "value",
+        "summary": "ZeroDev Kernel v3 ECDSA validator module ABI, at `0x845ADb2C711129d4f3966735eD98a9F09fC4cE57` (deployed on PEPU mainnet only; see `pepuContracts.ecdsaValidator` in `../contracts.js`)."
+      },
+      {
+        "name": "kernelFactoryAbi",
+        "kind": "value",
+        "summary": "ZeroDev Kernel v3 account factory ABI, at `0xaac5D4240AF87249B3f71BC8E4A2cae074A3E419` (deployed on PEPU mainnet only; see `pepuContracts.kernelFactory` in `../contracts.js`)."
+      },
+      {
+        "name": "listContracts",
+        "kind": "function",
+        "summary": "List all tracked contract entries for a chain id, in registry order."
+      },
+      {
+        "name": "listPepuSwapContracts",
+        "kind": "function",
+        "summary": "List every tracked PepuSwap contract entry for a chain id, in registry order."
+      },
+      {
+        "name": "maxSendableAmount",
+        "kind": "function",
+        "summary": "Options for {@link maxSendableAmount}."
+      },
+      {
+        "name": "MaxSendableAmountOptions",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "MaxSendableAmountResult",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "multicall3Abi",
+        "kind": "value",
+        "summary": "Minimal Multicall3 ABI (aggregate3 plus the common read helpers)."
+      },
+      {
+        "name": "NitroFeeBreakdown",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "paymasterBaseOf",
+        "kind": "function",
+        "summary": "Environment to read."
+      },
+      {
+        "name": "PaymasterContext",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "PaymasterDataRequest",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "PaymasterDataResult",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "PaymasterRpcError",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "PaymasterRpcParams",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "PaymasterRpcResponse",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "PaymasterStubDataRequest",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "PaymasterStubDataResult",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "PendingContract",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "PEPU_ENV",
+        "kind": "value",
+        "summary": "Server-side (and script) environment variable names."
+      },
+      {
+        "name": "PEPU_ERROR_CATALOG",
+        "kind": "value",
+        "summary": "What went wrong, in one or two sentences."
+      },
+      {
+        "name": "PEPU_ERRORS_DOCS_URL",
+        "kind": "value",
+        "summary": "The SDK error model."
+      },
+      {
+        "name": "PEPU_HOSTED",
+        "kind": "value",
+        "summary": "Hosted-URL swap point."
+      },
+      {
+        "name": "PEPU_PUBLIC_ENV",
+        "kind": "value",
+        "summary": "Browser-exposed variants (Next.js `NEXT_PUBLIC_` convention)."
+      },
+      {
+        "name": "PepuAddressRow",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "PepuAuthError",
+        "kind": "class",
+        "summary": "Bad or missing Privy token, wrong owner."
+      },
+      {
+        "name": "PepuBundlerError",
+        "kind": "class",
+        "summary": "AAxx, JSON-RPC errors, timeouts."
+      },
+      {
+        "name": "PepuChain",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "PepuChainError",
+        "kind": "class",
+        "summary": "Revert, nonce race, gas, rpc rate limit."
+      },
+      {
+        "name": "PepuChainId",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "pepuChains",
+        "kind": "value",
+        "summary": "All Pepe Unchained V2 chain definitions, mainnet first."
+      },
+      {
+        "name": "PepuConfigError",
+        "kind": "class",
+        "summary": "Missing env, bad URL, dashboard misconfiguration."
+      },
+      {
+        "name": "PepuContractName",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "PepuContractRegistry",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "pepuContracts",
+        "kind": "value",
+        "summary": "Canonical keys for contracts tracked by this registry."
+      },
+      {
+        "name": "PepuEndpoints",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "PepuError",
+        "kind": "class",
+        "summary": "Base class of every error the SDK throws."
+      },
+      {
+        "name": "PepuErrorCode",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "PepuErrorOptions",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "PepuKernelStack",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "pepuMainnet",
+        "kind": "value",
+        "summary": "Pepe Unchained V2 — mainnet."
+      },
+      {
+        "name": "pepuMulticall",
+        "kind": "function",
+        "summary": "viem `multicall` pinned to the PEPU Multicall3 address."
+      },
+      {
+        "name": "PepuPaymasterError",
+        "kind": "class",
+        "summary": "Reason codes, caps, balance, origin."
+      },
+      {
+        "name": "PepuPolicyError",
+        "kind": "class",
+        "summary": "Unscoped policy, name too long, expiry, denied by policy."
+      },
+      {
+        "name": "PepuscanClient",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "PepuscanTokenMetadata",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "PepuSessionError",
+        "kind": "class",
+        "summary": "No session, expired, mismatched approval."
+      },
+      {
+        "name": "PepuSwapContractName",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "pepuSwapContracts",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "pepuSwapMulticallAbi",
+        "kind": "value",
+        "summary": "PepuSwap's own multicall contract, at `0x927af2a6B76d2d8206d93004463F8C122701383B` on mainnet (see `pepuSwapContracts.multicallNonCanonical` in `../dex.js`)."
+      },
+      {
+        "name": "pepuSwapPermit2Abi",
+        "kind": "value",
+        "summary": "PepuSwap's own Permit2 deployment, at `0xB461c05f76d7f919FF7A3Df2B0D2593F56538b4B` on mainnet (see `pepuSwapContracts.permit2` in `../dex.js`)."
+      },
+      {
+        "name": "pepuSwapPositionManagerAbi",
+        "kind": "value",
+        "summary": "PepuSwap's `NonfungiblePositionManager` ABI subset, at `0xe2060CbdE18b5e765c86e5Cd6EE68AF209a9faa7` on mainnet (see `pepuSwapContracts.positionManager` in `../dex.js`)."
+      },
+      {
+        "name": "pepuSwapQuoterAbi",
+        "kind": "value",
+        "summary": "PepuSwap's `QuoterV2` ABI subset, at `0xd647b2D80b48e93613Aa6982b85f8909578b4829` on mainnet (see `pepuSwapContracts.quoterV2` in `../dex.js`)."
+      },
+      {
+        "name": "pepuSwapRouterAbi",
+        "kind": "value",
+        "summary": "PepuSwap's `SwapRouter02` ABI subset, at `0x150c3F0f16C3D9EB34351d7af9c961FeDc97A0fb` on mainnet (see `pepuSwapContracts.swapRouter02` in `../dex.js`)."
+      },
+      {
+        "name": "pepuSwapTickLensAbi",
+        "kind": "value",
+        "summary": "PepuSwap's `TickLens` ABI, at `0x4EB8aA84c066f9bf210eAfE33B30AE49BfafD9a6` on mainnet (see `pepuSwapContracts.tickLens` in `../dex.js`)."
+      },
+      {
+        "name": "pepuSwapUniversalRouterAbi",
+        "kind": "value",
+        "summary": "PepuSwap's `UniversalRouter` ABI, at `0x0dE72b751b77d3c74fB96C5fAd0320Cd8d133d36` on mainnet (see `pepuSwapContracts.universalRouter` in `../dex.js`)."
+      },
+      {
+        "name": "pepuSwapV3FactoryAbi",
+        "kind": "value",
+        "summary": "PepuSwap's Uniswap V3 core factory ABI, at `0x5984B8BF2d4dB9C0aCB1d7924762e4474D80C807` on mainnet (see `pepuSwapContracts.v3Factory` in `../dex.js`)."
+      },
+      {
+        "name": "pepuSwapV3PoolAbi",
+        "kind": "value",
+        "summary": "Minimal Uniswap V3 pool ABI for reading a PepuSwap pool's state — enough to price a pair and locate its liquidity, without the full swap/mint/burn surface."
+      },
+      {
+        "name": "pepuTestnet",
+        "kind": "value",
+        "summary": "Pepe Unchained V2 — testnet."
+      },
+      {
+        "name": "PepuTokenInfo",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "pepuTokenList",
+        "kind": "value",
+        "summary": "Shape mirrors the `TokenInfo` definition in the Uniswap Token List schema (https://uniswap.org/tokenlist.schema.json)."
+      },
+      {
+        "name": "PepuTokenList",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "permit2Abi",
+        "kind": "value",
+        "summary": "Canonical Permit2 ABI subset (AllowanceTransfer plus SignatureTransfer nonce reads)."
+      },
+      {
+        "name": "permit2Domain",
+        "kind": "function",
+        "summary": "EIP-712 domain for canonical Permit2: name \"Permit2\" (no version)."
+      },
+      {
+        "name": "Permit2TypedData",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "readPermit2Allowance",
+        "kind": "function",
+        "summary": "Read the Permit2 AllowanceTransfer allowance for (owner, token, spender)."
+      },
+      {
+        "name": "resolvePepuEndpoints",
+        "kind": "function",
+        "summary": "Resolve endpoints."
+      },
+      {
+        "name": "ResolvePepuEndpointsOptions",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "SponsorshipReport",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "SponsorshipStatus",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "switchOrAddPepuChain",
+        "kind": "function",
+        "summary": "Switch an EIP-1193 provider (e.g."
+      },
+      {
+        "name": "toAddEthereumChainParameter",
+        "kind": "function",
+        "summary": "Build the parameter object for an EIP-3085 `wallet_addEthereumChain` request from a {@link PepuChain}, so callers don't have to hand-assemble (and risk mistyping) `chainId` hex encoding, `nativeCurrency`, RPC URLs, an..."
+      },
+      {
+        "name": "toErrorBody",
+        "kind": "function",
+        "summary": "The `{ error: { code, message, hint } }` body route factories return."
+      },
+      {
+        "name": "toErrorResponse",
+        "kind": "function",
+        "summary": "A JSON `Response` with the error body and the status from the error model."
+      },
+      {
+        "name": "tokenUrl",
+        "kind": "function",
+        "summary": "Build a token-page URL."
+      },
+      {
+        "name": "toPepuError",
+        "kind": "function",
+        "summary": "Wrap anything thrown into a typed {@link PepuError}."
+      },
+      {
+        "name": "TransactionCostEstimate",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "txUrl",
+        "kind": "function",
+        "summary": "Build a transaction-page URL."
+      },
+      {
+        "name": "wpepuAbi",
+        "kind": "value",
+        "summary": "WPEPU (Wrapped Pepe Unchained) ABI."
+      }
+    ],
+    "@pepu-chain/sdk/react": [
+      {
+        "name": "usePepuBalance",
+        "kind": "function",
+        "summary": "Options for {@link usePepuBalance}."
+      },
+      {
+        "name": "UsePepuBalanceOptions",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "UsePepuBalanceResult",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "usePepuChain",
+        "kind": "function",
+        "summary": "Result of {@link usePepuChain}."
+      },
+      {
+        "name": "UsePepuChainResult",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "useSponsorshipStatus",
+        "kind": "function",
+        "summary": "React wrapper around {@link getSponsorshipStatus} — reports whether PEPU gas sponsorship is available."
+      }
+    ],
+    "@pepu-chain/sdk/privy": [
+      {
+        "name": "checkPrivyDashboardConfig",
+        "kind": "function",
+        "summary": "One row of a {@link checkPrivyDashboardConfig} result."
+      },
+      {
+        "name": "createPepuPrivyConfig",
+        "kind": "function",
+        "summary": "Typed Privy client config for PEPU (`@pepu-chain/sdk/privy`)."
+      },
+      {
+        "name": "CreatePepuPrivyConfigOptions",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "EmbeddedWalletCreateOnLogin",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "PEPU_PRIVY_REQUIREMENTS",
+        "kind": "value",
+        "summary": "The subset of Privy's public app-config response this SDK looks at."
+      },
+      {
+        "name": "PepuPrivyClientConfig",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "PRIVY_ENV",
+        "kind": "value",
+        "summary": "Privy requirements table and dashboard check (`@pepu-chain/sdk/privy`)."
+      },
+      {
+        "name": "PRIVY_ENV_ALIASES",
+        "kind": "value",
+        "summary": "Accepted fallback names, read only when the canonical {@link PRIVY_ENV} name is empty."
+      },
+      {
+        "name": "privyDashboardChecker",
+        "kind": "function",
+        "summary": "Structurally identical to `DoctorCheck` in `@pepu-chain/sdk/doctor` (defined locally so `/privy` does not import `/doctor`)."
+      },
+      {
+        "name": "PrivyDashboardCheckItem",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "PrivyDoctorCheck",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "PrivyLoginMethod",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "PrivyPublicAppConfig",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "PrivyRequirement",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "PrivyRequirementResult",
+        "kind": "value",
+        "summary": ""
+      }
+    ],
+    "@pepu-chain/sdk/privy/react": [
+      {
+        "name": "composeProviders",
+        "kind": "function",
+        "summary": "Privy app id."
+      },
+      {
+        "name": "EnsureWalletStatus",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "PepuPrivyProvider",
+        "kind": "function",
+        "summary": "`<PrivyProvider>` preconfigured for PEPU: mainnet only, Coinbase pinned to `eoaOnly`, wallet creation off (the server provisions it, see {@link WalletGate})."
+      },
+      {
+        "name": "PepuPrivyProviderProps",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "requestEnsureWallet",
+        "kind": "function",
+        "summary": "POST to the ensure-wallet route with the user's Privy access token and return the wallet address."
+      },
+      {
+        "name": "shouldPinEmbeddedWallet",
+        "kind": "function",
+        "summary": "Pure decision behind the pin hooks: pin only when enabled, hydrated, an embedded wallet exists and the active account is not already it."
+      },
+      {
+        "name": "useEmbeddedWallet",
+        "kind": "function",
+        "summary": "This user's Privy embedded wallet, separated from any external wallet Privy is tracking (an installed MetaMask or Phantom)."
+      },
+      {
+        "name": "useEnsureWallet",
+        "kind": "function",
+        "summary": "Provision this user's embedded wallet through the ensure-wallet route (see `createEnsureWalletRoute` in `/privy/server`), not Privy's client-side creation, which hangs for apps with the dashboard's creation setting off."
+      },
+      {
+        "name": "usePepuAuthFetch",
+        "kind": "function",
+        "summary": "The server confirmed the wallet but this session has not seen it after a bounded wait (a client sync delay)."
+      },
+      {
+        "name": "usePinEmbeddedWallet",
+        "kind": "function",
+        "summary": "Generic half of the active-wallet pin: re-asserts the embedded wallet whenever the active account drifts away from it."
+      },
+      {
+        "name": "WalletGate",
+        "kind": "function",
+        "summary": "Renders `children` once the user's embedded wallet exists, provisioning it first through the ensure-wallet route."
+      }
+    ],
+    "@pepu-chain/sdk/privy/wagmi": [
+      {
+        "name": "EMBEDDED_WALLET_IS_ACTIVE_BY_DEFAULT",
+        "kind": "value",
+        "summary": "`@pepu-chain/sdk/privy/wagmi` (browser)."
+      },
+      {
+        "name": "PepuPrivyWagmiProvider",
+        "kind": "function",
+        "summary": "Default {@link EMBEDDED_WALLET_IS_ACTIVE_BY_DEFAULT}."
+      },
+      {
+        "name": "PepuPrivyWagmiProviderProps",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "pepuWagmiConfig",
+        "kind": "function",
+        "summary": "A wagmi config for PEPU, built with `@privy-io/wagmi`'s `createConfig` (plain wagmi's is a documented footgun with Privy: embedded wallets would not appear as a connector)."
+      },
+      {
+        "name": "useActiveWalletPin",
+        "kind": "function",
+        "summary": "Keeps wagmi's active account (what `useAccount`, `useBalance` and `useSendTransaction` act on) pinned to the user's Privy embedded wallet."
+      }
+    ],
+    "@pepu-chain/sdk/privy/server": [
+      {
+        "name": "createEnsureWalletRoute",
+        "kind": "function",
+        "summary": "Next.js route handler that creates the signed-in user's Ethereum embedded wallet server-side if they have none."
+      },
+      {
+        "name": "createPrivyServer",
+        "kind": "function",
+        "summary": "A cached `PrivyClient` (`@privy-io/node`) built from {@link PRIVY_ENV}."
+      },
+      {
+        "name": "findDelegatedEthereumWallet",
+        "kind": "function",
+        "summary": "The user's Ethereum embedded wallet that has been delegated (granted a session signer), or `null`."
+      },
+      {
+        "name": "findEmbeddedEthereumWallet",
+        "kind": "function",
+        "summary": "The user's Ethereum embedded wallet (delegated or not), or `null`."
+      },
+      {
+        "name": "LinkedWallet",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "PepuUser",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "privyEnvVar",
+        "kind": "function",
+        "summary": "`@pepu-chain/sdk/privy/server` (server)."
+      },
+      {
+        "name": "PrivyServerEnv",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "PrivyUser",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "readPrivyServerEnv",
+        "kind": "function",
+        "summary": "Read the Privy server variables ({@link PRIVY_ENV}), explicit options winning."
+      },
+      {
+        "name": "requireUser",
+        "kind": "function",
+        "summary": "Authenticate a request for a route handler."
+      },
+      {
+        "name": "verifyRequestUser",
+        "kind": "function",
+        "summary": "Verify the `Authorization: Bearer <token>` header against Privy and return the caller's Privy user id and claims."
+      }
+    ],
+    "@pepu-chain/sdk/session": [
+      {
+        "name": "ApprovalCheck",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "assertWithinPolicyNameLimit",
+        "kind": "function",
+        "summary": "Throws if `value` is over {@link PRIVY_POLICY_NAME_MAX_LENGTH}; returns it otherwise."
+      },
+      {
+        "name": "BroadcastClient",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "broadcastSignedTransaction",
+        "kind": "function",
+        "summary": "Broadcast a raw signed transaction (from Privy `eth_signTransaction`) to PEPU through a viem client and return the transaction hash."
+      },
+      {
+        "name": "buildSessionPolicy",
+        "kind": "function",
+        "summary": "Body for `privy.policies().create(...)`."
+      },
+      {
+        "name": "BuildSessionPolicyParams",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "checkApproval",
+        "kind": "function",
+        "summary": "Result of {@link checkApproval}."
+      },
+      {
+        "name": "DEFAULT_SESSION_MINUTES",
+        "kind": "value",
+        "summary": "Default session length when `SESSION_DURATION_MINUTES` is unset or invalid."
+      },
+      {
+        "name": "describeKernelSessionScope",
+        "kind": "function",
+        "summary": "Pure Kernel session helpers (scope types, consent-screen data, call-in-scope check, approval parsing)."
+      },
+      {
+        "name": "describeSessionScope",
+        "kind": "function",
+        "summary": "One callable function in a session's scope, ready for a consent screen."
+      },
+      {
+        "name": "isCallInScope",
+        "kind": "function",
+        "summary": "True when `call` (target plus 4-byte selector, value) is inside `scope`."
+      },
+      {
+        "name": "KernelSessionCall",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "KernelSessionScope",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "MAX_SESSION_MINUTES",
+        "kind": "value",
+        "summary": "Upper bound for a session: 24 hours."
+      },
+      {
+        "name": "parseApproval",
+        "kind": "function",
+        "summary": "Parsed fields of an `approval` string."
+      },
+      {
+        "name": "ParsedApproval",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "PRIVY_POLICY_NAME_MAX_LENGTH",
+        "kind": "value",
+        "summary": "SERVER-ONLY helpers (`@pepu-chain/sdk/server`)."
+      },
+      {
+        "name": "PrivyUnsignedTransaction",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "resolveSessionMinutes",
+        "kind": "function",
+        "summary": "Parse a session duration (an env value or number) into minutes: anything missing, non-numeric, zero or negative falls back to {@link DEFAULT_SESSION_MINUTES}; anything above {@link MAX_SESSION_MINUTES} is clamped."
+      },
+      {
+        "name": "SESSION_TRUST_NOTICE",
+        "kind": "value",
+        "summary": "The mandatory honest statements about who enforces a session's limits."
+      },
+      {
+        "name": "sessionExpiry",
+        "kind": "function",
+        "summary": "The unix-seconds expiry for a session that starts at `nowSeconds` and lasts `minutes`."
+      },
+      {
+        "name": "SessionPolicy",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "SessionPolicyCondition",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "SessionPolicyRule",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "SessionScope",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "SessionScopeFunction",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "signAndBroadcast",
+        "kind": "function",
+        "summary": "The wallet that signs (the session-signer wallet's address)."
+      },
+      {
+        "name": "SignAndBroadcastClient",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "SignAndBroadcastParams",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "SignedTransactionLike",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "withGasLimitBuffer",
+        "kind": "function",
+        "summary": "The unsigned legacy transaction body Privy's `eth_signTransaction` takes (snake_case, hex quantities)."
+      }
+    ],
+    "@pepu-chain/sdk/session/server": [
+      {
+        "name": "broadcastSignedTransaction",
+        "kind": "function",
+        "summary": "Broadcast a raw signed transaction (from Privy `eth_signTransaction`) to PEPU through a viem client and return the transaction hash."
+      },
+      {
+        "name": "createSessionActionRoute",
+        "kind": "function",
+        "summary": "As in {@link CreateSessionRoutesOptions}: an unset address yields `CONFIG_MISSING_ENV` at request time."
+      },
+      {
+        "name": "CreateSessionActionRouteOptions",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "createSessionRoutes",
+        "kind": "function",
+        "summary": "Contract and functions a session may touch."
+      },
+      {
+        "name": "CreateSessionRoutesOptions",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "LazySessionScopeInput",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "privySessionSigner",
+        "kind": "function",
+        "summary": "The wallet's address (the `from` of the transaction)."
+      },
+      {
+        "name": "PrivySessionSignerOptions",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "SessionCall",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "SessionPrivyClient",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "SessionScopeInput",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "signAndBroadcast",
+        "kind": "function",
+        "summary": "The wallet that signs (the session-signer wallet's address)."
+      },
+      {
+        "name": "VerifyUser",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "withGasLimitBuffer",
+        "kind": "function",
+        "summary": "The unsigned legacy transaction body Privy's `eth_signTransaction` takes (snake_case, hex quantities)."
+      }
+    ],
+    "@pepu-chain/sdk/session/react": [
+      {
+        "name": "AuthFetch",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "deriveSessionState",
+        "kind": "function",
+        "summary": "Session state from the server's `delegated` flag and the locally tracked expiry."
+      },
+      {
+        "name": "errorFromResponse",
+        "kind": "function",
+        "summary": "Client hooks for the Privy-mode session."
+      },
+      {
+        "name": "SessionActStatus",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "SessionGrantStatus",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "SessionRevokeStatus",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "SessionState",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "useSessionAct",
+        "kind": "function",
+        "summary": "Call a session action route (built with `createSessionActionRoute`)."
+      },
+      {
+        "name": "useSessionGrant",
+        "kind": "function",
+        "summary": "Grant a session: POST the grant route, then ask the user to approve with Privy's `addSigners`."
+      },
+      {
+        "name": "useSessionRevoke",
+        "kind": "function",
+        "summary": "True until the first status response (or failure) has been applied."
+      },
+      {
+        "name": "useSessionStatus",
+        "kind": "function",
+        "summary": "Current session state."
+      }
+    ],
+    "@pepu-chain/sdk/session/kernel": [
+      {
+        "name": "ApprovalCheck",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "approveKernelSession",
+        "kind": "function",
+        "summary": "In the user's browser: the owner (the Privy embedded wallet, the only thing that can authorize a session) signs ONE EIP-712 message that enables a permission validator on their Kernel account."
+      },
+      {
+        "name": "buildKernelSessionPolicies",
+        "kind": "function",
+        "summary": "The on-chain policies for one session: call policy v0.0.4 plus the timestamp policy."
+      },
+      {
+        "name": "CALL_POLICY_V0_0_4_ADDRESS",
+        "kind": "value",
+        "summary": "`@pepu-chain/sdk/session/kernel`: on-chain session keys with ZeroDev Kernel permissions."
+      },
+      {
+        "name": "checkApproval",
+        "kind": "function",
+        "summary": "Result of {@link checkApproval}."
+      },
+      {
+        "name": "createMemoryStore",
+        "kind": "function",
+        "summary": "Server-side session records for the Kernel (on-chain) session flow, keyed by Privy user id."
+      },
+      {
+        "name": "describeKernelSessionScope",
+        "kind": "function",
+        "summary": "Pure Kernel session helpers (scope types, consent-screen data, call-in-scope check, approval parsing)."
+      },
+      {
+        "name": "expectedPermissionId",
+        "kind": "function",
+        "summary": "The permission id the chain derives for this session key plus these policies."
+      },
+      {
+        "name": "generateSessionKey",
+        "kind": "function",
+        "summary": "A fresh random session key."
+      },
+      {
+        "name": "getKernelAddress",
+        "kind": "function",
+        "summary": "`regular` is a ZeroDev validator plugin, for example the permission validator from `@zerodev/permissions` (see `@pepu-chain/sdk/session/kernel`)."
+      },
+      {
+        "name": "isCallInScope",
+        "kind": "function",
+        "summary": "True when `call` (target plus 4-byte selector, value) is inside `scope`."
+      },
+      {
+        "name": "isLive",
+        "kind": "function",
+        "summary": "True while the on-chain permission is still valid: approved and before expiry."
+      },
+      {
+        "name": "KERNEL_VERSION",
+        "kind": "value",
+        "summary": "Kernel v3.1, the version deployed on PEPU mainnet (factory in the contract registry)."
+      },
+      {
+        "name": "KernelOwner",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "KernelSessionCall",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "KernelSessionScope",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "KernelSmartAccount",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "loadKernelSessionAccount",
+        "kind": "function",
+        "summary": "On the server: rebuild the session's Kernel account from the approval and the server-held session key (an ECDSA signer for that key)."
+      },
+      {
+        "name": "parseApproval",
+        "kind": "function",
+        "summary": "Parsed fields of an `approval` string."
+      },
+      {
+        "name": "ParsedApproval",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "SESSION_GAS_RESERVATION_PEPU",
+        "kind": "value",
+        "summary": "Worst-case gas the paymaster policy service RESERVES per sponsored operation, measured on PEPU mainnet with the sponsored-session-app template: the first operation of a session (account deploy plus enabling the permis..."
+      },
+      {
+        "name": "SessionRecord",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "SessionStore",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "TIMESTAMP_POLICY_ADDRESS",
+        "kind": "value",
+        "summary": "ZeroDev timestamp policy on PEPU mainnet."
+      }
+    ],
+    "@pepu-chain/sdk/aa": [
+      {
+        "name": "BundlerProbeResult",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "Call",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "checkSponsorship",
+        "kind": "function",
+        "summary": "Live sponsorship report from {@link checkSponsorship}."
+      },
+      {
+        "name": "CheckSponsorshipOptions",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "createPepuBundlerClient",
+        "kind": "function",
+        "summary": "A viem bundler client for PEPU's bundler, with the fee estimator pre-wired ({@link estimatePepuUserOpFees})."
+      },
+      {
+        "name": "createPepuPaymasterClient",
+        "kind": "function",
+        "summary": "An ERC-7677 paymaster client for PEPU (viem `createPaymasterClient`), using the endpoints registry for the URL."
+      },
+      {
+        "name": "describeUserOpFailure",
+        "kind": "function",
+        "summary": "Turn anything thrown by the bundler, paymaster or viem/Privy stack into a typed PepuError."
+      },
+      {
+        "name": "EncodedCall",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "encodeKernelExecute",
+        "kind": "function",
+        "summary": "The ERC-7579 `execute(bytes32 mode, bytes executionCalldata)` callData a Kernel v3 account puts in a UserOperation."
+      },
+      {
+        "name": "ENTRY_POINT_V07",
+        "kind": "value",
+        "summary": "EntryPoint v0.7, the only version PEPU's bundler and paymaster speak."
+      },
+      {
+        "name": "estimatePepuUserOpFees",
+        "kind": "function",
+        "summary": "The Alto-compatible fee estimator: the chain's own `estimateFeesPerGas`, with `maxFeePerGas` x 1.2."
+      },
+      {
+        "name": "FetchLike",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "getKernelAccountAddress",
+        "kind": "function",
+        "summary": "Compute (or confirm) the counterfactual address of a Kernel v3 smart account via the verified factory's `getAddress(data, salt)` — a thin, typed pass-through, not a re-implementation."
+      },
+      {
+        "name": "getPaymasterDeposit",
+        "kind": "function",
+        "summary": "The paymaster's EntryPoint v0.7 deposit in wei."
+      },
+      {
+        "name": "getPepuKernelStack",
+        "kind": "function",
+        "summary": "The account-abstraction contracts a Kernel v3 smart account needs, narrowed to their {@link DeployedContract} form for a given chain."
+      },
+      {
+        "name": "getSponsorshipStatus",
+        "kind": "function",
+        "summary": "Legacy static gas-sponsorship status for PEPU."
+      },
+      {
+        "name": "GetSponsorshipStatusOptions",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "normalizeCalls",
+        "kind": "function",
+        "summary": "A call in the exact `{ to, value, data }` shape smart-account clients take."
+      },
+      {
+        "name": "PaymasterProbeResult",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "PepuKernelStack",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "probeBundler",
+        "kind": "function",
+        "summary": "Minimal fetch signature, so tests and non-browser hosts can inject one."
+      },
+      {
+        "name": "ProbeOptions",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "probePaymaster",
+        "kind": "function",
+        "summary": "Probe the hosted (or a self-hosted) paymaster service."
+      },
+      {
+        "name": "redactSecrets",
+        "kind": "function",
+        "summary": "Remove anything credential-shaped from text that may reach a message: `/paymaster/<token>` URL paths, bearer tokens, API keys, JWTs and URL credentials."
+      },
+      {
+        "name": "SponsoredResult",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "SponsorshipReport",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "SponsorshipStatus",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "UserOpEvent",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "userOpEventFromReceipt",
+        "kind": "function",
+        "summary": "Read who paid and how much from a bundle transaction receipt's `UserOperationEvent` (EntryPoint v0.7)."
+      },
+      {
+        "name": "userOpEventsFromReceipt",
+        "kind": "function",
+        "summary": "One UserOperationEvent from a bundle receipt."
+      }
+    ],
+    "@pepu-chain/sdk/aa/kernel": [
+      {
+        "name": "Call",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "createPepuSponsoredClient",
+        "kind": "function",
+        "summary": "A Kernel client that sends through YOUR bundler and has gas paid by YOUR paymaster (ERC-7677)."
+      },
+      {
+        "name": "encodeKernelExecute",
+        "kind": "function",
+        "summary": "The ERC-7579 `execute(bytes32 mode, bytes executionCalldata)` callData a Kernel v3 account puts in a UserOperation."
+      },
+      {
+        "name": "getKernelAddress",
+        "kind": "function",
+        "summary": "`regular` is a ZeroDev validator plugin, for example the permission validator from `@zerodev/permissions` (see `@pepu-chain/sdk/session/kernel`)."
+      },
+      {
+        "name": "KERNEL_VERSION",
+        "kind": "value",
+        "summary": "Kernel v3.1, the version deployed on PEPU mainnet (factory in the contract registry)."
+      },
+      {
+        "name": "KernelAccountClient",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "KernelOwner",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "KernelSmartAccount",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "sendSponsored",
+        "kind": "function",
+        "summary": "Project client token; builds the ERC-7677 URL against the paymaster base when no URL is configured."
+      },
+      {
+        "name": "SendSponsoredResult",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "toPepuKernelAccount",
+        "kind": "function",
+        "summary": "The Kernel account type this module builds."
+      }
+    ],
+    "@pepu-chain/sdk/aa/react": [
+      {
+        "name": "Call",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "SponsoredResult",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "SponsoredSendStatus",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "usePepuSmartAccount",
+        "kind": "function",
+        "summary": "The two-address model made explicit: `owner` is the Privy embedded wallet (an EOA that signs), `smartAccount` is the Kernel account that sends and holds assets."
+      },
+      {
+        "name": "usePepuSponsorship",
+        "kind": "function",
+        "summary": "Live sponsorship status, polled."
+      },
+      {
+        "name": "useSponsoredSend",
+        "kind": "function",
+        "summary": "Status of a {@link useSponsoredSend} send."
+      },
+      {
+        "name": "UseSponsoredSendOptions",
+        "kind": "type",
+        "summary": ""
+      }
+    ],
+    "@pepu-chain/sdk/aa/react-direct": [
+      {
+        "name": "Call",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "DirectSponsoredSendStatus",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "SponsoredResult",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "useDirectSmartAccount",
+        "kind": "function",
+        "summary": "The two-address model for the direct transport: `owner` is the Privy embedded wallet (an EOA that signs), `smartAccount` is the Kernel address derived from it with {@link getKernelAddress} (a read)."
+      },
+      {
+        "name": "useDirectSponsoredSend",
+        "kind": "function",
+        "summary": "Status of a {@link useDirectSponsoredSend} send."
+      },
+      {
+        "name": "UseDirectSponsoredSendOptions",
+        "kind": "type",
+        "summary": ""
+      }
+    ],
+    "@pepu-chain/sdk/paymaster": [
+      {
+        "name": "assertApproved",
+        "kind": "function",
+        "summary": "Turn a sponsor result into the approval, or throw the mapped {@link PepuPaymasterError} (`project_not_claimed_onchain` becomes `PAYMASTER_PROJECT_NOT_CLAIMED`, and so on)."
+      },
+      {
+        "name": "buildErc7677Url",
+        "kind": "function",
+        "summary": "Policy-service base URL."
+      },
+      {
+        "name": "BuildErc7677UrlOptions",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "computeProjectId",
+        "kind": "function",
+        "summary": "`projectId = keccak256(bytes(appId))`."
+      },
+      {
+        "name": "configureProject",
+        "kind": "function",
+        "summary": "Give `appId` or `projectId`."
+      },
+      {
+        "name": "ConfigureProjectParams",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "createPaymasterApi",
+        "kind": "function",
+        "summary": "Create the paymaster REST client."
+      },
+      {
+        "name": "CreatePaymasterApiOptions",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "credentialKind",
+        "kind": "function",
+        "summary": "REST client for the PEPU paymaster policy service: v1 (`/sponsor`, ERC-7677 at `/paymaster/<token>`) and v2 (`/v2/*`, tiered, on-chain projects)."
+      },
+      {
+        "name": "decodePaymasterRevert",
+        "kind": "function",
+        "summary": "Decode raw revert data from the v2 paymaster contract (for example `ProjectNotClaimed(bytes32)`, `ClaimExpired(uint256)`, `NotProjectOwner()`)."
+      },
+      {
+        "name": "depositFor",
+        "kind": "function",
+        "summary": "Give `appId` or `projectId`."
+      },
+      {
+        "name": "DepositForParams",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "encodeAcceptProjectOwnership",
+        "kind": "function",
+        "summary": "Encode `acceptProjectOwnership(projectId)`: step two of the ownership transfer, sent by the proposed owner."
+      },
+      {
+        "name": "encodeCancelReclaim",
+        "kind": "function",
+        "summary": "Encode `cancelReclaim(projectId)`: the current owner cancels a pending re-claim, ONCE per new owner (a second attested re-claim by the same new owner cannot be cancelled)."
+      },
+      {
+        "name": "encodeClaimFromVerification",
+        "kind": "function",
+        "summary": "Pick `claimProject` or `reclaimProject` from a `/v2/projects/verify` result (its `action` field) and encode it."
+      },
+      {
+        "name": "encodeClaimProject",
+        "kind": "function",
+        "summary": "Encode `claimProject(Claim)`."
+      },
+      {
+        "name": "encodeDeposit",
+        "kind": "function",
+        "summary": "Encode `depositFor(projectId)` with native PEPU as `value`."
+      },
+      {
+        "name": "encodeExecuteReclaim",
+        "kind": "function",
+        "summary": "Encode `executeReclaim(projectId)`: completes a pending claim or re-claim once its delay has passed (and before it expires, 30 days later)."
+      },
+      {
+        "name": "encodeProposeProjectOwner",
+        "kind": "function",
+        "summary": "Encode `proposeProjectOwner(projectId, newOwner)`: step one of the two-step ownership transfer."
+      },
+      {
+        "name": "encodeReclaimProject",
+        "kind": "function",
+        "summary": "Encode `reclaimProject(Claim)`: a timelocked (>= 48h) re-claim of an already-owned project."
+      },
+      {
+        "name": "encodeSetDailyLimit",
+        "kind": "function",
+        "summary": "Encode `setDailyLimit(projectId, limitWei)`: the project's total daily gas budget."
+      },
+      {
+        "name": "encodeSetPaused",
+        "kind": "function",
+        "summary": "Encode `setPaused(projectId, paused)`."
+      },
+      {
+        "name": "encodeSetSenderDailyLimit",
+        "kind": "function",
+        "summary": "Encode `setSenderDailyLimit(projectId, limitWei)`: the per-wallet daily gas limit."
+      },
+      {
+        "name": "encodeSetTargets",
+        "kind": "function",
+        "summary": "Encode `setTargets(projectId, targets, allowed)`: add or remove destination contracts the project sponsors (at most 50 per call)."
+      },
+      {
+        "name": "getProjectId",
+        "kind": "value",
+        "summary": "Plan name for {@link computeProjectId}."
+      },
+      {
+        "name": "hostedErc7677Url",
+        "kind": "function",
+        "summary": "The hosted ERC-7677 URL for a project credential: `<hosted base>/v2/paymaster/<token>`."
+      },
+      {
+        "name": "LoginWithWalletOptions",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "mapPaymasterReason",
+        "kind": "function",
+        "summary": "Map a denial reason string to a catalog code."
+      },
+      {
+        "name": "PAYMASTER_DENIAL_REASONS",
+        "kind": "value",
+        "summary": "Denial reasons the v2 policy service returns (services/paymaster/policy-service/src/sponsorship/types.ts, `SponsorshipDenialReason`) plus the v1-only reasons (`src/types.ts`, `DenialReason`)."
+      },
+      {
+        "name": "PAYMASTER_REASON_CODES",
+        "kind": "value",
+        "summary": "Reason to catalog code."
+      },
+      {
+        "name": "PaymasterAddressOption",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "PaymasterApi",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "PaymasterApiV1",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "PaymasterApiV2",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "PaymasterCall",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "PaymasterDenialReason",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "paymasterReasonToError",
+        "kind": "function",
+        "summary": "Build the typed error for a denial reason."
+      },
+      {
+        "name": "pepuSponsoredPaymasterV2Abi",
+        "kind": "value",
+        "summary": "ABI of the PEPU v2 sponsored paymaster (PepuSponsoredPaymasterV7.sol)."
+      },
+      {
+        "name": "PreparedTx",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "PrepareRequest",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "ProjectClaimAttestation",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "ProjectDetail",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "ProjectSettings",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "ProjectState",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "Quantity",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "readProject",
+        "kind": "function",
+        "summary": "State of a project, read from the paymaster contract."
+      },
+      {
+        "name": "ReadProjectOptions",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "RegisterProjectRequest",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "RegisterProjectResponse",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "resolvePaymasterV2Address",
+        "kind": "function",
+        "summary": "A transaction a wallet (or smart account batch) can send."
+      },
+      {
+        "name": "sendPaymasterCalls",
+        "kind": "function",
+        "summary": "Send prepared calls one after another from a wallet client, returning the hashes."
+      },
+      {
+        "name": "serializeAttestation",
+        "kind": "function",
+        "summary": "Serialize a typed attestation into the wire format for `projects.prepare`."
+      },
+      {
+        "name": "SerializedAttestation",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "SponsorApproval",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "SponsorAuth",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "SponsorDenial",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "SponsorResult",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "SponsorUserOp",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "V2ConfigResponse",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "V2ContractInfo",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "V2FreeTierInfo",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "V2LoginResult",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "V2RequestOptions",
+        "kind": "value",
+        "summary": ""
+      }
+    ],
+    "@pepu-chain/sdk/paymaster/server": [
+      {
+        "name": "ClaimAttestationResult",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "requestClaimAttestation",
+        "kind": "function",
+        "summary": "`@pepu-chain/sdk/paymaster/server`: the one paymaster call that carries a Privy app secret."
+      },
+      {
+        "name": "RequestClaimAttestationParams",
+        "kind": "type",
+        "summary": ""
+      }
+    ],
+    "@pepu-chain/sdk/combo": [
+      {
+        "name": "assertCallsInScope",
+        "kind": "function",
+        "summary": "Throws `POLICY_UNSCOPED` (403) unless every call targets an allowed contract and function selector with a value within the limit."
+      },
+      {
+        "name": "ComboAuthenticate",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "ComboUser",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "createMemoryStore",
+        "kind": "function",
+        "summary": "Server-side session records for the Kernel (on-chain) session flow, keyed by Privy user id."
+      },
+      {
+        "name": "createSponsoredSessionRoutes",
+        "kind": "function",
+        "summary": "The authenticated caller of a combo route."
+      },
+      {
+        "name": "isLive",
+        "kind": "function",
+        "summary": "True while the on-chain permission is still valid: approved and before expiry."
+      },
+      {
+        "name": "KernelSessionCall",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "KernelSessionScope",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "resolveSessionMinutes",
+        "kind": "function",
+        "summary": "Parse a session duration (an env value or number) into minutes: anything missing, non-numeric, zero or negative falls back to {@link DEFAULT_SESSION_MINUTES}; anything above {@link MAX_SESSION_MINUTES} is clamped."
+      },
+      {
+        "name": "SessionRecord",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "SessionStore",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "SponsoredActResult",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "SponsoredSessionRoutes",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "SponsoredSessionRoutesOptions",
+        "kind": "type",
+        "summary": ""
+      }
+    ],
+    "@pepu-chain/sdk/combo/react": [
+      {
+        "name": "DEFAULT_SESSION_ENDPOINTS",
+        "kind": "value",
+        "summary": "`@pepu-chain/sdk/combo/react` (browser): hooks for the combined flow."
+      },
+      {
+        "name": "deriveSessionPhase",
+        "kind": "function",
+        "summary": "Where the session flow is, for rendering."
+      },
+      {
+        "name": "grantKernelSession",
+        "kind": "function",
+        "summary": "The grant, outside React: ask the server to `prepare` a session key, have `owner` sign the ONE EIP-712 approval (no gas), then `activate`."
+      },
+      {
+        "name": "PreparedSession",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "PROVISIONING_RETRY_DELAYS_MS",
+        "kind": "value",
+        "summary": "The last expiry the server reported for an active session, if any."
+      },
+      {
+        "name": "SponsoredActResult",
+        "kind": "value",
+        "summary": ""
+      },
+      {
+        "name": "SponsoredSessionEndpoints",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "SponsoredSessionPhase",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "SponsoredSessionStatus",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "useSponsoredSession",
+        "kind": "function",
+        "summary": "Waits between retries of `prepare` while the server cannot see a new wallet yet."
+      },
+      {
+        "name": "UseSponsoredSessionOptions",
+        "kind": "type",
+        "summary": ""
+      }
+    ],
+    "@pepu-chain/sdk/server": [
+      {
+        "name": "assertWithinPolicyNameLimit",
+        "kind": "function",
+        "summary": "Throws if `value` is over {@link PRIVY_POLICY_NAME_MAX_LENGTH}; returns it otherwise."
+      },
+      {
+        "name": "BroadcastClient",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "broadcastSignedTransaction",
+        "kind": "function",
+        "summary": "Broadcast a raw signed transaction (from Privy `eth_signTransaction`) to PEPU through a viem client and return the transaction hash."
+      },
+      {
+        "name": "buildSessionPolicy",
+        "kind": "function",
+        "summary": "Body for `privy.policies().create(...)`."
+      },
+      {
+        "name": "BuildSessionPolicyParams",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "DEFAULT_SESSION_MINUTES",
+        "kind": "value",
+        "summary": "Default session length when `SESSION_DURATION_MINUTES` is unset or invalid."
+      },
+      {
+        "name": "describeSessionScope",
+        "kind": "function",
+        "summary": "One callable function in a session's scope, ready for a consent screen."
+      },
+      {
+        "name": "MAX_SESSION_MINUTES",
+        "kind": "value",
+        "summary": "Upper bound for a session: 24 hours."
+      },
+      {
+        "name": "PRIVY_POLICY_NAME_MAX_LENGTH",
+        "kind": "value",
+        "summary": "SERVER-ONLY helpers (`@pepu-chain/sdk/server`)."
+      },
+      {
+        "name": "PrivyUnsignedTransaction",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "resolveSessionMinutes",
+        "kind": "function",
+        "summary": "Parse a session duration (an env value or number) into minutes: anything missing, non-numeric, zero or negative falls back to {@link DEFAULT_SESSION_MINUTES}; anything above {@link MAX_SESSION_MINUTES} is clamped."
+      },
+      {
+        "name": "SESSION_TRUST_NOTICE",
+        "kind": "value",
+        "summary": "The mandatory honest statements about who enforces a session's limits."
+      },
+      {
+        "name": "sessionExpiry",
+        "kind": "function",
+        "summary": "The unix-seconds expiry for a session that starts at `nowSeconds` and lasts `minutes`."
+      },
+      {
+        "name": "SessionPolicy",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "SessionPolicyCondition",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "SessionPolicyRule",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "SessionScope",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "SessionScopeFunction",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "signAndBroadcast",
+        "kind": "function",
+        "summary": "The wallet that signs (the session-signer wallet's address)."
+      },
+      {
+        "name": "SignAndBroadcastClient",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "SignAndBroadcastParams",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "SignedTransactionLike",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "withGasLimitBuffer",
+        "kind": "function",
+        "summary": "The unsigned legacy transaction body Privy's `eth_signTransaction` takes (snake_case, hex quantities)."
+      }
+    ],
+    "@pepu-chain/sdk/doctor": [
+      {
+        "name": "checkChainRpc",
+        "kind": "function",
+        "summary": "Check the chain RPC answers and reports chainId 97741."
+      },
+      {
+        "name": "checkPepuEnv",
+        "kind": "function",
+        "summary": "Check an env map against a template's requirements."
+      },
+      {
+        "name": "checkPrivyAppIdFormat",
+        "kind": "function",
+        "summary": "Privy app id format check."
+      },
+      {
+        "name": "checkSponsorshipEndpoints",
+        "kind": "function",
+        "summary": "Check the bundler and paymaster URLs resolved by the endpoints registry."
+      },
+      {
+        "name": "CheckStatus",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "DoctorCheck",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "DoctorReport",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "EnvCheckResult",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "EnvItem",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "EnvItemStatus",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "generatePrivyAuthorizationKey",
+        "kind": "function",
+        "summary": "P-256 authorization key generator for Privy session signers."
+      },
+      {
+        "name": "Pillar",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "PRIVY_APP_ID_PATTERN",
+        "kind": "value",
+        "summary": "Shared types for `@pepu-chain/sdk/doctor`."
+      },
+      {
+        "name": "PrivyAuthorizationKeyPair",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "PrivyDashboardChecker",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "PrivyDashboardRequirementKey",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "runDoctor",
+        "kind": "function",
+        "summary": "Override fetch (tests, proxies)."
+      },
+      {
+        "name": "RunDoctorOptions",
+        "kind": "type",
+        "summary": ""
+      },
+      {
+        "name": "TEMPLATE_REQUIREMENTS",
+        "kind": "value",
+        "summary": "Per-template env and Privy dashboard requirements, read from each template's `.env.example` and `lib/env*.ts`."
+      },
+      {
+        "name": "TemplateRequirement",
+        "kind": "type",
+        "summary": ""
+      }
+    ]
+  }
+}

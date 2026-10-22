@@ -1,0 +1,24 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.pepu-org/pepu",
+  "description": "MCP server for building on Pepe Unchained (PEPU) V2 with @pepu-chain/sdk: chain facts, contract registry, bundler/paymaster/sponsorship probes, error and tx explanation, template scaffolding, env and Privy checks, session policies, calldata and project-transaction encoding, bundled docs and SDK snippets, plus pepuscan (Blockscout) and RPC lookups. Not a generic Blockscout wrapper.",
+  "title": "Pepe Unchained (PEPU)",
+  "websiteUrl": "https://docs.pepeunchained.com",
+  "repository": {
+    "url": "https://github.com/pepu-org/pepu-devkit",
+    "source": "github",
+    "subfolder": "packages/mcp"
+  },
+  "version": "0.2.8",
+  "packages": [
+    {
+      "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "identifier": "@pepu-chain/mcp",
+      "version": "0.2.8",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}

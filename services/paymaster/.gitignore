@@ -1,0 +1,18 @@
+# Mirrors services/bundler/.gitignore's pattern: this directory tree should
+# be safe to copy/vendor on its own, so it carries its own ignore rules
+# rather than relying solely on the repo-root .gitignore.
+
+.env
+.env.*
+!.env.example
+node_modules/
+dist/
+*.log
+
+# node:sqlite database files (policy-service's counters + audit log). Never
+# commit real state; tests use in-memory or throwaway temp-dir databases.
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+data/

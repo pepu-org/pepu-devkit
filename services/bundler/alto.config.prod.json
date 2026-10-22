@@ -1,0 +1,20 @@
+{
+    "entrypoints": "0x0000000071727De22E5E9d8BAf0edAc6f37da032,0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789",
+    "deterministic-deployer-address": "0x4e59b44847b379578588920ca78fbf26c0b4956c",
+    "deploy-simulations-contract": true,
+    "chain-type": "arbitrum",
+    "arbitrum-base-fee-multiplier": "150",
+    "eip-7702-support": true,
+    "legacy-transactions": false,
+    "is-gas-free-chain": false,
+    "safe-mode": false,
+    "dangerous-skip-user-operation-validation": false,
+    "enable-debug-endpoints": false,
+    "enable-cors": false,
+    "multicall3-address": "0x9CE19273Ae9c24437DFF512E8DFCAed4E4B001bd",
+    "refilling-wallets": false,
+    "port": 4337,
+    "block-time": 5000,
+    "log-level": "info",
+    "json": true
+}

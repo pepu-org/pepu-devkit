@@ -1,0 +1,15 @@
+{
+    "name": "pepu-bundler",
+    "version": "0.1.0",
+    "private": true,
+    "description": "Self-hosted ERC-4337 Alto bundler for PEPU mainnet (chain 97741). Not gas sponsorship by itself -- see AGENTS.md.",
+    "type": "module",
+    "scripts": {
+        "start": "alto run --config alto.config.json",
+        "healthcheck": "node scripts/healthcheck.js"
+    },
+    "dependencies": {
+        "@pimlico/alto": "0.0.21",
+        "viem": "2.56.8"
+    }
+}

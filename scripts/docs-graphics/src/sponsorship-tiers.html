@@ -1,0 +1,18 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="theme.css">
+<style>.q{display:flex;gap:0;align-items:stretch}.q .card{flex:1}.q .right{width:76px}
+.card h3{font-size:21px}.k{font-family:var(--display);font-size:30px;color:var(--lime);font-weight:800;line-height:1}
+.kk{display:flex;gap:22px;margin-top:12px}.kk small{display:block;font-size:12px;color:var(--ink-muted);margin-top:3px}
+.deny{border-color:var(--danger-line);background:linear-gradient(180deg,#2a0e0b,#1a0907)}.deny h3{color:var(--danger)}
+.warn{margin-top:20px;display:flex;gap:12px;align-items:center;border-radius:14px;padding:12px 18px;background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn);font-size:14px}</style>
+<body><div id="frame">
+<div class="head"><img src="../../../templates/_design/assets/pepu-logo.svg"><div><div class="eyebrow">v2 paymaster · who pays</div><h1 class="title">Sponsorship tiers</h1></div></div>
+<div class="q">
+<div class="card feat"><span class="badge">1</span><h3 style="margin-top:10px">Project budget</h3><p>Tried first, if the request belongs to a claimed project that can pay. Any wallet.</p><ul><li>On-chain balance and daily limits</li><li>Destination allowlist</li><li>Gas price cap</li></ul></div>
+<div class="right"><span>else</span></div>
+<div class="card"><span class="badge">2</span><h3 style="margin-top:10px">Chain free tier</h3><p>Funded by the chain. Privy users of PEPU's own app, with a verified Privy token.</p>
+<div class="kk"><div><span class="k">100</span><small>PEPU per user per day</small></div><div><span class="k">50</span><small>PEPU per user per hour</small></div></div></div>
+<div class="right"><span>else</span></div>
+<div class="card deny"><span class="badge" style="background:var(--danger)">3</span><h3 style="margin-top:10px">Denied</h3><p>With a reason for each tier tried. An operation is never split between tiers.</p></div>
+</div>
+<div class="warn"><b>Deposits are one-way.</b> Anyone can deposit into a project; nobody can withdraw. The free tier never pays for a project's non-Privy wallets.</div>
+<div class="foot"><span>Contract 0xdb28528C…C30D · canary, external audit pending</span><span>onboarding/sponsorship-tiers</span></div></div>

@@ -1,0 +1,175 @@
+[
+  {
+    "name": "consumer-app",
+    "title": "Consumer app",
+    "description": "Email, Google or wallet sign-in, an embedded wallet, and a real PEPU send - Next.js + Privy + wagmi",
+    "features": [
+      "login"
+    ],
+    "requiredEnv": [
+      "NEXT_PUBLIC_PRIVY_APP_ID",
+      "PRIVY_APP_SECRET"
+    ],
+    "optionalEnv": [],
+    "privyDashboard": [
+      "login-methods",
+      "allowed-origins",
+      "embedded-wallets"
+    ],
+    "extraSteps": [],
+    "hasContracts": false,
+    "difficulty": "starter",
+    "recommendedFor": "Your first PEPU app: login, wallet, send.",
+    "mcp": true
+  },
+  {
+    "name": "token-gated-app",
+    "title": "Token-gated app",
+    "description": "Sign in, then unlock content by holding an ERC-20 or NFT - balance checks batched via Multicall3",
+    "features": [
+      "login"
+    ],
+    "requiredEnv": [
+      "NEXT_PUBLIC_PRIVY_APP_ID",
+      "PRIVY_APP_SECRET"
+    ],
+    "optionalEnv": [
+      "NEXT_PUBLIC_GATE_ERC20_ADDRESS",
+      "NEXT_PUBLIC_GATE_ERC721_ADDRESS"
+    ],
+    "privyDashboard": [
+      "login-methods",
+      "allowed-origins",
+      "embedded-wallets"
+    ],
+    "extraSteps": [
+      "Set NEXT_PUBLIC_GATE_ERC20_ADDRESS and/or NEXT_PUBLIC_GATE_ERC721_ADDRESS in .env.local to the token that unlocks your content (at least one is required)."
+    ],
+    "hasContracts": false,
+    "difficulty": "starter",
+    "recommendedFor": "Holder-only content, communities, perks.",
+    "mcp": true
+  },
+  {
+    "name": "nft-mint",
+    "title": "NFT mint",
+    "description": "An ERC-721 mint page (connect, mint, view owned tokens) plus the Foundry + Hardhat contract",
+    "features": [
+      "login"
+    ],
+    "requiredEnv": [
+      "NEXT_PUBLIC_PRIVY_APP_ID",
+      "PRIVY_APP_SECRET",
+      "NEXT_PUBLIC_NFT_CONTRACT_ADDRESS"
+    ],
+    "optionalEnv": [],
+    "privyDashboard": [
+      "login-methods",
+      "allowed-origins",
+      "embedded-wallets"
+    ],
+    "extraSteps": [
+      "Deploy the ERC-721 contract in contracts/ (Foundry or Hardhat, see its README) and set NEXT_PUBLIC_NFT_CONTRACT_ADDRESS to the deployed address."
+    ],
+    "hasContracts": true,
+    "difficulty": "intermediate",
+    "recommendedFor": "A mint page for your own collection.",
+    "mcp": true
+  },
+  {
+    "name": "game-app",
+    "title": "Game app",
+    "description": "A tap-to-score game demoing Privy session signers - grant once, then play with no wallet popup per move",
+    "features": [
+      "login",
+      "session"
+    ],
+    "requiredEnv": [
+      "NEXT_PUBLIC_PRIVY_APP_ID",
+      "PRIVY_APP_SECRET",
+      "NEXT_PUBLIC_PRIVY_KEY_QUORUM_ID",
+      "PRIVY_AUTHORIZATION_KEY",
+      "NEXT_PUBLIC_GAME_CONTRACT_ADDRESS"
+    ],
+    "optionalEnv": [
+      "SESSION_DURATION_MINUTES",
+      "PEPU_RPC_URL"
+    ],
+    "privyDashboard": [
+      "login-methods",
+      "allowed-origins",
+      "embedded-wallets",
+      "authorization-key-quorum"
+    ],
+    "extraSteps": [
+      "Run {run:generate-authorization-key} to create a P-256 authorization key pair. Register the public key as a key quorum in the Privy dashboard, then set NEXT_PUBLIC_PRIVY_KEY_QUORUM_ID (the quorum id) and PRIVY_AUTHORIZATION_KEY (the private key; server only, never commit it).",
+      "Deploy the TapScore contract in contracts/ (Foundry or Hardhat) and set NEXT_PUBLIC_GAME_CONTRACT_ADDRESS."
+    ],
+    "hasContracts": true,
+    "difficulty": "advanced",
+    "recommendedFor": "Games and apps that need many fast, popup-free actions.",
+    "mcp": true
+  },
+  {
+    "name": "sponsored-demo",
+    "title": "Sponsored demo",
+    "description": "Gas-sponsored transactions: a zero-balance smart account taps on-chain, paid by the PEPU paymaster (uses the hosted bundler; the paymaster needs your project's token)",
+    "features": [
+      "login",
+      "sponsor"
+    ],
+    "requiredEnv": [
+      "NEXT_PUBLIC_PRIVY_APP_ID",
+      "PRIVY_APP_SECRET"
+    ],
+    "optionalEnv": [
+      "NEXT_PUBLIC_PAYMASTER_CONTRACT_ADDRESS"
+    ],
+    "privyDashboard": [
+      "login-methods",
+      "allowed-origins",
+      "embedded-wallets",
+      "smart-wallets"
+    ],
+    "extraSteps": [
+      "In the Privy dashboard enable Smart Wallets: chain 97741, provider Kernel, bundler URL https://bundler.pepeunchained.com and paymaster URL https://paymaster.pepeunchained.com/v2/paymaster/<your project token> (claim, deposit and register a project first; see README)."
+    ],
+    "hasContracts": false,
+    "difficulty": "advanced",
+    "recommendedFor": "Gasless transactions through the PEPU paymaster.",
+    "mcp": true
+  },
+  {
+    "name": "sponsored-session-app",
+    "title": "Sponsored session app",
+    "description": "Google or email sign-in, one scoped on-chain session, then actions with no popup and no user gas: ZeroDev Kernel session key plus the PEPU paymaster (uses the hosted PEPU bundler and paymaster by default; the paymaster URL needs your project token)",
+    "features": [
+      "login",
+      "session",
+      "sponsor"
+    ],
+    "requiredEnv": [
+      "NEXT_PUBLIC_PRIVY_APP_ID",
+      "PRIVY_APP_SECRET",
+      "PEPU_BUNDLER_URL",
+      "PEPU_PAYMASTER_URL"
+    ],
+    "optionalEnv": [
+      "SESSION_DURATION_MINUTES",
+      "PEPU_RPC_URL"
+    ],
+    "privyDashboard": [
+      "login-methods",
+      "login-methods.google",
+      "allowed-origins",
+      "embedded-wallets"
+    ],
+    "extraSteps": [
+      "Set PEPU_BUNDLER_URL (default https://bundler.pepeunchained.com) and PEPU_PAYMASTER_URL (https://paymaster.pepeunchained.com/v2/paymaster/<your project server key>; server only, it embeds a secret). Get a project first: claim, deposit, set limits, register (see README)."
+    ],
+    "hasContracts": false,
+    "difficulty": "advanced",
+    "recommendedFor": "The full stack: Google or email sign-in, session keys and sponsored gas.",
+    "mcp": true
+  }
+]

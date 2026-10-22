@@ -1,0 +1,249 @@
+{
+  "name": "@pepu-chain/sdk",
+  "version": "0.2.4",
+  "description": "Chain definitions, contract registry, token list, and viem helpers for Pepe Unchained V2.",
+  "license": "MIT",
+  "author": "Pepe Unchained <contact@pepeunchained.com> (https://pepeunchained.com)",
+  "homepage": "https://docs.pepeunchained.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pepu-org/pepu-devkit.git",
+    "directory": "packages/sdk"
+  },
+  "bugs": {
+    "url": "https://github.com/pepu-org/pepu-devkit/issues"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "node": {
+        "import": "./dist/react.guard.js"
+      },
+      "import": "./dist/react.js",
+      "require": "./dist/react.cjs"
+    },
+    "./privy": {
+      "types": "./dist/privy.d.ts",
+      "import": "./dist/privy.js",
+      "require": "./dist/privy.cjs"
+    },
+    "./privy/react": {
+      "types": "./dist/privy/react.d.ts",
+      "node": {
+        "import": "./dist/privy/react.guard.js"
+      },
+      "import": "./dist/privy/react.js",
+      "require": "./dist/privy/react.cjs"
+    },
+    "./privy/wagmi": {
+      "types": "./dist/privy/wagmi.d.ts",
+      "node": {
+        "import": "./dist/privy/wagmi.guard.js"
+      },
+      "import": "./dist/privy/wagmi.js"
+    },
+    "./privy/server": {
+      "types": "./dist/privy/server.d.ts",
+      "node": {
+        "import": "./dist/privy/server.guard.js"
+      },
+      "import": "./dist/privy/server.js",
+      "require": "./dist/privy/server.cjs"
+    },
+    "./session": {
+      "types": "./dist/session.d.ts",
+      "import": "./dist/session.js",
+      "require": "./dist/session.cjs"
+    },
+    "./session/server": {
+      "types": "./dist/session/server.d.ts",
+      "node": {
+        "import": "./dist/session/server.guard.js"
+      },
+      "import": "./dist/session/server.js",
+      "require": "./dist/session/server.cjs"
+    },
+    "./session/react": {
+      "types": "./dist/session/react.d.ts",
+      "node": {
+        "import": "./dist/session/react.guard.js"
+      },
+      "import": "./dist/session/react.js",
+      "require": "./dist/session/react.cjs"
+    },
+    "./session/kernel": {
+      "types": "./dist/session/kernel.d.ts",
+      "node": {
+        "import": "./dist/session/kernel.guard.js"
+      },
+      "import": "./dist/session/kernel.js",
+      "require": "./dist/session/kernel.cjs"
+    },
+    "./aa": {
+      "types": "./dist/aa.d.ts",
+      "import": "./dist/aa.js",
+      "require": "./dist/aa.cjs"
+    },
+    "./aa/kernel": {
+      "types": "./dist/aa/kernel.d.ts",
+      "node": {
+        "import": "./dist/aa/kernel.guard.js"
+      },
+      "import": "./dist/aa/kernel.js",
+      "require": "./dist/aa/kernel.cjs"
+    },
+    "./aa/react": {
+      "types": "./dist/aa/react.d.ts",
+      "node": {
+        "import": "./dist/aa/react.guard.js"
+      },
+      "import": "./dist/aa/react.js",
+      "require": "./dist/aa/react.cjs"
+    },
+    "./aa/react-direct": {
+      "types": "./dist/aa/react-direct.d.ts",
+      "node": {
+        "import": "./dist/aa/react-direct.guard.js"
+      },
+      "import": "./dist/aa/react-direct.js",
+      "require": "./dist/aa/react-direct.cjs"
+    },
+    "./paymaster": {
+      "types": "./dist/paymaster.d.ts",
+      "import": "./dist/paymaster.js",
+      "require": "./dist/paymaster.cjs"
+    },
+    "./paymaster/server": {
+      "types": "./dist/paymaster/server.d.ts",
+      "import": "./dist/paymaster/server.js",
+      "require": "./dist/paymaster/server.cjs"
+    },
+    "./combo": {
+      "types": "./dist/combo.d.ts",
+      "node": {
+        "import": "./dist/combo.guard.js"
+      },
+      "import": "./dist/combo.js",
+      "require": "./dist/combo.cjs"
+    },
+    "./combo/react": {
+      "types": "./dist/combo/react.d.ts",
+      "node": {
+        "import": "./dist/combo/react.guard.js"
+      },
+      "import": "./dist/combo/react.js",
+      "require": "./dist/combo/react.cjs"
+    },
+    "./server": {
+      "types": "./dist/server.d.ts",
+      "import": "./dist/server.js",
+      "require": "./dist/server.cjs"
+    },
+    "./doctor": {
+      "types": "./dist/doctor.d.ts",
+      "import": "./dist/doctor.js",
+      "require": "./dist/doctor.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "LICENSE",
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup && node scripts/prune-esm-only.mjs && node scripts/guard-peers.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "live-check": "node scripts/live-check.mjs",
+    "prove-session": "node scripts/prove-session.mjs",
+    "prepack": "node -e \"require('node:fs').copyFileSync('../../LICENSE','LICENSE')\""
+  },
+  "peerDependencies": {
+    "viem": "^2.0.0",
+    "react": "^18.0.0 || ^19.0.0",
+    "@privy-io/react-auth": "^3.44.0",
+    "@privy-io/node": "^0.34.0",
+    "@privy-io/wagmi": "^4.0.0",
+    "wagmi": "^3.0.0",
+    "@tanstack/react-query": "^5.0.0",
+    "@zerodev/sdk": "^5.5.0",
+    "@zerodev/permissions": "^5.6.0",
+    "@zerodev/ecdsa-validator": "^5.4.0",
+    "permissionless": "^0.2.47"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "@privy-io/react-auth": {
+      "optional": true
+    },
+    "@privy-io/node": {
+      "optional": true
+    },
+    "@privy-io/wagmi": {
+      "optional": true
+    },
+    "wagmi": {
+      "optional": true
+    },
+    "@tanstack/react-query": {
+      "optional": true
+    },
+    "@zerodev/sdk": {
+      "optional": true
+    },
+    "@zerodev/permissions": {
+      "optional": true
+    },
+    "@zerodev/ecdsa-validator": {
+      "optional": true
+    },
+    "permissionless": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@privy-io/node": "^0.34.0",
+    "@privy-io/react-auth": "^3.44.0",
+    "@privy-io/wagmi": "^4.0.17",
+    "@tanstack/react-query": "^5.103.1",
+    "@testing-library/react": "^16.1.0",
+    "@types/node": "^22.10.2",
+    "@types/react": "^19.0.2",
+    "@zerodev/ecdsa-validator": "^5.4.9",
+    "@zerodev/permissions": "^5.6.3",
+    "@zerodev/sdk": "^5.5.10",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "jsdom": "^25.0.1",
+    "publint": "^0.3.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.3",
+    "viem": "^2.56.8",
+    "vitest": "^2.1.9",
+    "wagmi": "^3.7.7"
+  },
+  "keywords": [
+    "pepu",
+    "pepe-unchained",
+    "viem",
+    "evm",
+    "sdk"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

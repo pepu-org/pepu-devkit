@@ -1,0 +1,14 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="theme.css">
+<style>.s{display:flex;gap:16px;align-items:center;margin-bottom:12px}.s .card{flex:1;padding:13px 18px;display:flex;justify-content:space-between;align-items:center;gap:18px}
+.s h3{font-size:19px;margin:0}.s p{font-size:13px;text-align:right;max-width:430px}
+.code{font-family:var(--mono);font-size:14px;color:var(--lime);background:rgb(0 0 0/.35);border:1px solid var(--line);border-radius:10px;padding:6px 12px;white-space:nowrap}
+.done{border-color:var(--g500);box-shadow:0 0 0 1px rgb(14 155 9/.2),0 18px 48px -20px rgb(14 155 9/.55)}</style>
+<body><div id="frame">
+<div class="head"><img src="../../../templates/_design/assets/pepu-logo.svg"><div><div class="eyebrow">About 10 minutes</div><h1 class="title">Zero to a sponsored transaction</h1></div></div>
+<div class="s"><span class="badge">1</span><div class="card"><h3>Scaffold</h3><span class="code">npx create-pepu-app@latest</span></div></div>
+<div class="s"><span class="badge">2</span><div class="card"><h3>Fill .env.local</h3><p>Privy App ID and App Secret</p></div></div>
+<div class="s"><span class="badge">3</span><div class="card"><h3>Privy dashboard</h3><p>Allowed origin with port, Google login, embedded wallets</p></div></div>
+<div class="s"><span class="badge">4</span><div class="card"><h3>Check setup</h3><span class="code">npm run doctor</span></div></div>
+<div class="s"><span class="badge">5</span><div class="card"><h3>Run</h3><span class="code">npm run dev</span></div></div>
+<div class="s"><span class="badge">6</span><div class="card done"><h3>First sponsored transaction</h3><p>Sign in, tap, and a paymaster pays the gas</p></div></div>
+<div class="foot"><span>Sponsored templates also need a paymaster project (step 3 to 4)</span><span>get-started/quickstart-app</span></div></div>

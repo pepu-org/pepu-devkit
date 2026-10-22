@@ -1,0 +1,20 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="theme.css">
+<style>.card h3{font-size:22px}.p{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.t{display:grid;gap:9px;margin-top:12px}.t div{font-size:13px;color:var(--ink-soft);border-top:1px solid var(--line);padding-top:8px}
+.t b{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted);font-weight:700}
+.t .y{color:var(--g300);font-weight:600}.t .n{color:var(--danger);font-weight:600}.t .w{color:var(--warn);font-weight:600}
+.sm{font-size:12px;color:var(--ink-muted);margin-top:10px}</style>
+<body><div id="frame">
+<div class="head"><img src="../../../templates/_design/assets/pepu-logo.svg"><div><div class="eyebrow">Pick your starting point</div><h1 class="title">Smart account paths</h1></div></div>
+<div class="row" style="align-items:stretch">
+<div class="card"><div class="p"><span class="pill">Path 0</span><span class="tag">no smart account</span></div><h3>Plain embedded wallet</h3><p>One address. The Privy wallet signs and sends.</p>
+<div class="t"><div><b>Who pays gas</b><span class="n">The user, in PEPU</span></div><div><b>Sessions</b><span class="w">None, or Privy session signers (off-chain)</span></div><div><b>Free tier</b><span class="n">No</span></div><div><b>Project budgets</b><span class="n">No</span></div></div>
+<div class="sm">Start from <span class="mono">consumer-app</span></div></div>
+<div class="card feat"><div class="p"><span class="pill l">Path 1</span><span class="tag">ZeroDev-native · SDK</span></div><h3>SDK builds the Kernel account</h3><p>Kernel v3.1 owned by the embedded wallet. Recommended default.</p>
+<div class="t"><div><b>Who pays gas</b><span class="y">Your project, or the free tier</span></div><div><b>Sessions</b><span class="y">On-chain, no popup per action</span></div><div><b>Free tier</b><span class="y">Yes, PEPU's own Privy app</span></div><div><b>Project budgets</b><span class="y">Yes (server key or client token)</span></div></div>
+<div class="sm">Start from <span class="mono">sponsored-session-app</span></div></div>
+<div class="card"><div class="p"><span class="pill g">Path 2</span><span class="tag">Privy Smart Wallets</span></div><h3>Privy builds the Kernel account</h3><p>Set up once in the Privy dashboard. Client-side only.</p>
+<div class="t"><div><b>Who pays gas</b><span class="y">Your project</span></div><div><b>Sessions</b><span class="n">None through our SDK</span></div><div><b>Free tier</b><span class="n">No (static URL, no token)</span></div><div><b>Project budgets</b><span class="y">Yes (client token in the dashboard)</span></div></div>
+<div class="sm">Start from <span class="mono">sponsored-demo</span></div></div>
+</div>
+<div class="foot"><span>Not sure? Take Path 1. Same Kernel v3.1 contract on Paths 1 and 2.</span><span>concepts/smart-account-paths</span></div></div>

@@ -1,0 +1,17 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="theme.css">
+<style>.plus{display:grid;place-items:center;font-size:30px;color:var(--lime);font-family:var(--display);width:20px;flex:none}
+.top{display:flex;gap:12px;align-items:center;margin-bottom:10px}
+.steps{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap}.ar{color:var(--g400);font-size:20px}</style>
+<body><div id="frame">
+<div class="head"><img src="../../../templates/_design/assets/pepu-logo.svg"><div><div class="eyebrow">The dev kit in one picture</div><h1 class="title">Three pillars, one combination</h1></div></div>
+<div class="row" style="align-items:stretch">
+<div class="card"><div class="top"><span class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18M5 7c4 2 10 2 14 0M5 17c4-2 10-2 14 0"/></svg></span><span class="badge">1</span></div><h3>Google to wallet</h3><p>Click "Sign in with Google" and get a self-custodial Privy embedded wallet. No seed phrase, no extension.</p><ul><li>Privy login</li><li>Embedded wallet on chain 97741</li></ul></div>
+<div class="plus">+</div>
+<div class="card"><div class="top"><span class="ico"><svg viewBox="0 0 24 24"><circle cx="8" cy="12" r="4"/><path d="M12 12h9M18 12v4M15 12v3"/></svg></span><span class="badge">2</span></div><h3>Session keys</h3><p>Approve once, then act with no popup per transaction. Scope and expiry are set up front.</p><ul><li>Privy session signers</li><li>Kernel on-chain session</li></ul></div>
+<div class="plus">+</div>
+<div class="card"><div class="top"><span class="ico"><svg viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg></span><span class="badge">3</span></div><h3>Sponsored transactions</h3><p>A smart account holding 0 PEPU sends, and a paymaster pays the gas.</p><ul><li>Bundler, EntryPoint v0.7</li><li>v2 paymaster</li></ul></div>
+</div>
+<div class="down"></div>
+<div class="card feat" style="text-align:center"><div class="eyebrow">The combination</div><h3 style="font-size:26px;margin:4px 0 14px">Google login, one signature, no popups, no user gas</h3>
+<div class="steps"><span class="pill g">Sign in with Google</span><span class="ar">&rarr;</span><span class="pill g">One owner signature</span><span class="ar">&rarr;</span><span class="pill g">Sponsored taps</span><span class="ar">&rarr;</span><span class="pill l">Limits enforced on-chain</span></div></div>
+<div class="foot"><span>Proven on mainnet, live in a browser 2026-10-14</span><span>template: sponsored-session-app</span></div></div>

@@ -1,0 +1,21 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="theme.css">
+<style>.card h3{font-size:24px}.big{padding:24px}.r{margin-top:12px;display:grid;gap:8px}
+.r div{font-size:14px;color:var(--ink-soft);border-top:1px solid var(--line);padding-top:8px}
+.r b{color:var(--ink);display:inline-block;width:104px;font-weight:600}
+.mid{display:flex;flex-direction:column;align-items:center;justify-content:center;width:150px;flex:none;gap:6px}
+.mid .right{width:110px;height:30px}.mid small{font-size:12px;color:var(--ink-muted);text-align:center}
+.bal{margin-top:14px;padding:12px;border-radius:12px;background:rgb(0 0 0/.3);border:1px dashed var(--line-strong);text-align:center}
+.bal strong{font-family:var(--display);font-size:28px;color:var(--lime)}
+.note{margin-top:20px;display:flex;gap:14px}.note .card{flex:1;font-size:14px}</style>
+<body><div id="frame">
+<div class="head"><img src="../../../templates/_design/assets/pepu-logo.svg"><div><div class="eyebrow">Sponsored flows have two addresses</div><h1 class="title">The two-address model</h1></div></div>
+<div style="display:flex;gap:0;align-items:stretch">
+<div class="card big" style="flex:1"><span class="pill">Signer · owner</span><h3 style="margin-top:12px">Embedded wallet (EOA)</h3><p>Created by Privy at Google login. Authorizes actions.</p>
+<div class="r"><div><b>Role</b>Signs. Owns the smart account.</div><div><b>Holds PEPU?</b>Only if you send it some</div><div><b>On pepuscan</b>Not the sender of the sponsored tx</div></div></div>
+<div class="mid"><div class="right"><span>controls</span></div><small>address derived from owner + salt</small></div>
+<div class="card big feat" style="flex:1"><span class="pill l">Sender · holds assets</span><h3 style="margin-top:12px">Kernel v3.1 smart account</h3><p>A contract account. A different address from the wallet, and that is correct.</p>
+<div class="r"><div><b>Role</b>Sends and holds tokens</div><div><b>Gas</b>Paid by the paymaster</div><div><b>On pepuscan</b>The sender of the transaction</div></div>
+<div class="bal"><div class="tag">PEPU balance</div><strong>0 PEPU</strong> <span style="color:var(--ink-soft);font-size:13px">and it still sends</span></div></div>
+</div>
+<div class="note"><div class="card"><span class="yes">Do</span> show users the smart account address in sponsored flows.</div><div class="card"><span class="no">Do not</span> send funds to one address expecting them at the other.</div></div>
+<div class="foot"><span>The account is created counterfactually: the first sponsored operation deploys it.</span><span>onboarding/two-address-model</span></div></div>

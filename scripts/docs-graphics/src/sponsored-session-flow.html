@@ -1,0 +1,16 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="theme.css">
+<style>.steps{display:flex;gap:0;align-items:stretch}.steps .card{flex:1;padding:16px 14px;text-align:left}.steps .right{width:34px}
+.steps h3{font-size:17px;margin:10px 0 4px}.steps p{font-size:13px}.sig{margin-top:8px;font-size:12px;font-weight:700}
+.band{margin-top:22px;display:flex;gap:14px}.band .card{flex:1;font-size:14px;color:var(--ink-soft)}.band b{color:var(--ink)}</style>
+<body><div id="frame">
+<div class="head"><img src="../../../templates/_design/assets/pepu-logo.svg"><div><div class="eyebrow">The combination, end to end</div><h1 class="title">One signature, then no popups, no gas</h1></div></div>
+<div class="steps">
+<div class="card"><span class="badge">1</span><h3>Sign in with Google</h3><p>Privy login.</p><div class="sig yes">Popup: login only</div></div><div class="right"></div>
+<div class="card"><span class="badge">2</span><h3>Wallet ready</h3><p>Embedded wallet is the owner of the Kernel account.</p><div class="sig yes">Created for you</div></div><div class="right"></div>
+<div class="card feat"><span class="badge">3</span><h3>Approve one session</h3><p>Scoped, time-limited. One EIP-712 owner signature, no gas.</p><div class="sig" style="color:var(--lime)">The one signature</div></div><div class="right"></div>
+<div class="card feat"><span class="badge">4</span><h3>Tap, tap, tap</h3><p>Session key signs each UserOperation. Paymaster pays.</p><div class="sig" style="color:var(--lime)">No popup · no gas</div></div><div class="right"></div>
+<div class="card"><span class="badge">5</span><h3>Revoke</h3><p>End the session whenever you like. It also expires on its own.</p><div class="sig yes">You stay in control</div></div>
+</div>
+<div class="band"><div class="card"><b>The chain enforces the limits.</b> A call policy and a timestamp policy run on-chain during validation. A different function, or an expired grant, is refused.</div>
+<div class="card"><b>Server holds the session key</b> (<span class="mono">/combo</span> routes). A compromised server can only do what the permission allows until it expires.</div></div>
+<div class="foot"><span>Proven live in a browser on mainnet, 2026-10-14 · template: sponsored-session-app</span><span>onboarding/google-session-sponsored</span></div></div>

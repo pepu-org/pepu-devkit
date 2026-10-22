@@ -1,0 +1,18 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="theme.css">
+<style>.step{display:flex;gap:16px;align-items:center}.step .card{flex:1;padding:14px 18px}.step h3{font-size:19px;margin:0}
+.step p{font-size:13px}.m{font-family:var(--mono);font-size:12px;color:var(--lime)}
+.col{display:grid;gap:0}.col .down{height:30px}.lane{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:5px}</style>
+<body><div id="frame">
+<div class="head"><img src="../../../templates/_design/assets/pepu-logo.svg"><div><div class="eyebrow">Pillar 3</div><h1 class="title">Anatomy of a sponsored transaction</h1></div></div>
+<div class="col">
+<div class="step"><span class="badge">1</span><div class="card"><h3>Client builds a UserOperation</h3><p>The Kernel account (0 PEPU) is the sender. <span class="m">useSponsoredSend</span> or <span class="m">useDirectSponsoredSend</span>.</p></div></div>
+<div class="down"></div>
+<div class="step"><span class="badge">2</span><div class="card"><h3>Paymaster stub data, then final data</h3><p>ERC-7677 against paymaster.pepeunchained.com: <span class="m">pm_getPaymasterStubData</span>, gas estimate, then <span class="m">pm_getPaymasterData</span>, the signed approval.</p></div></div>
+<div class="down"></div>
+<div class="step"><span class="badge">3</span><div class="card"><h3>Owner signs, bundler receives</h3><p><span class="m">eth_sendUserOperation</span> to bundler.pepeunchained.com (ERC-4337, EntryPoint v0.7).</p></div></div>
+<div class="down"></div>
+<div class="step"><span class="badge">4</span><div class="card feat"><h3>EntryPoint validates, executes, charges</h3><p>Bundler submits <span class="m">handleOps</span>. The v2 paymaster contract <span class="m">0xdb28…C30D</span> pays from its EntryPoint deposit. The account never needs PEPU.</p></div></div>
+<div class="down"></div>
+<div class="step"><span class="badge">5</span><div class="card"><h3>Transaction lands on PEPU mainnet</h3><p>Look it up on pepuscan.com by the smart account address, the sender.</p></div></div>
+</div>
+<div class="foot"><span>No paymaster approval, no transaction: the policy service signs only if every rule passes.</span><span>onboarding/sponsored-transactions</span></div></div>
